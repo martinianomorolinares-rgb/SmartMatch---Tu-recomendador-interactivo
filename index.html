@@ -1,4 +1,3 @@
-HTML
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -20,6 +19,9 @@ HTML
             --secondary-btn-hover: #475569;
             --download-btn: #8b5cf6;
             --download-btn-hover: #7c3aed;
+            --alt-btn: #f59e0b;
+            --alt-btn-hover: #d97706;
+            --pink-btn: #ec4899;
         }
 
         body {
@@ -34,6 +36,17 @@ HTML
             align-items: center;
             min-height: 100vh;
             box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2000;
         }
 
         /* Menú lateral (Drawer) */
@@ -43,7 +56,7 @@ HTML
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.65);
             backdrop-filter: blur(4px);
             z-index: 999;
             opacity: 0;
@@ -59,8 +72,8 @@ HTML
         .sidebar {
             position: fixed;
             top: 0;
-            left: -320px;
-            width: 300px;
+            left: -340px;
+            width: 320px;
             height: 100%;
             background-color: #0d1322;
             border-right: 1px solid var(--card-border);
@@ -69,7 +82,7 @@ HTML
             transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             flex-direction: column;
-            padding: 25px;
+            padding: 22px;
             box-sizing: border-box;
         }
 
@@ -81,15 +94,15 @@ HTML
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
             border-bottom: 1px solid var(--card-border);
-            padding-bottom: 15px;
+            padding-bottom: 12px;
         }
 
         .sidebar-header h3 {
             margin: 0;
             color: var(--accent);
-            font-size: 1.2rem;
+            font-size: 1.15rem;
         }
 
         .close-sidebar {
@@ -105,12 +118,37 @@ HTML
             color: var(--text-main);
         }
 
+        .sidebar-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-muted);
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background-color: rgba(56, 189, 248, 0.15);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
         .history-list {
             flex-grow: 1;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
             padding-right: 4px;
         }
 
@@ -136,7 +174,7 @@ HTML
         }
 
         .history-item-title {
-            font-size: 0.95rem;
+            font-size: 0.92rem;
             font-weight: bold;
             color: var(--text-main);
             margin: 0;
@@ -149,14 +187,14 @@ HTML
             margin-top: 40px;
         }
 
-        /* Top bar de navegación */
+        /* Top bar */
         .top-bar {
             width: 100%;
-            max-width: 650px;
+            max-width: 700px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         .menu-btn {
@@ -173,6 +211,7 @@ HTML
             font-size: 1.2rem;
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             transition: background 0.2s, transform 0.2s;
+            position: relative;
         }
 
         .menu-btn:hover {
@@ -180,35 +219,47 @@ HTML
             transform: scale(1.05);
         }
 
+        .fav-counter-dot {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--pink-btn);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 10px;
+            display: none;
+        }
+
         header {
             text-align: center;
-            margin-bottom: 10px;
             flex-grow: 1;
         }
 
         header h1 {
             margin: 0;
             color: var(--accent);
-            font-size: 1.8rem;
+            font-size: 1.85rem;
             font-weight: 800;
             letter-spacing: -0.5px;
-            text-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+            text-shadow: 0 0 20px rgba(56, 189, 248, 0.25);
         }
 
         header p {
             color: var(--text-muted);
             font-size: 0.9rem;
-            margin: 5px 0 0 0;
+            margin: 4px 0 0 0;
         }
 
         .container {
             width: 100%;
-            max-width: 650px;
+            max-width: 700px;
             background-color: var(--card-bg);
             border: 1px solid var(--card-border);
             border-radius: 16px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            padding: 28px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.45);
             box-sizing: border-box;
             position: relative;
             overflow: hidden;
@@ -221,11 +272,11 @@ HTML
             left: 0;
             width: 100%;
             height: 4px;
-            background: linear-gradient(90deg, var(--accent), var(--download-btn), var(--success));
+            background: linear-gradient(90deg, var(--accent), var(--download-btn), var(--pink-btn), var(--success));
         }
 
         .form-group {
-            margin-bottom: 22px;
+            margin-bottom: 20px;
         }
 
         label {
@@ -234,6 +285,13 @@ HTML
             font-weight: 600;
             color: var(--accent);
             font-size: 0.95rem;
+        }
+
+        .helper-hint {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            display: block;
         }
 
         select, textarea {
@@ -257,24 +315,69 @@ HTML
 
         textarea {
             resize: none;
-            height: 75px;
+            height: 74px;
+        }
+
+        .quick-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .tag-chip {
+            background-color: #0b111e;
+            border: 1px solid var(--card-border);
+            color: var(--text-muted);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .tag-chip:hover {
+            border-color: var(--accent);
+            color: var(--text-main);
+            transform: translateY(-1px);
+        }
+
+        .tag-chip.active {
+            background-color: rgba(56, 189, 248, 0.15);
+            border-color: var(--accent);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .main-buttons-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 10px;
+        }
+
+        @media (max-width: 500px) {
+            .main-buttons-row {
+                grid-template-columns: 1fr;
+            }
         }
 
         .btn {
             background: linear-gradient(135deg, var(--accent), var(--accent-hover));
             color: #0f172a;
             border: none;
-            padding: 14px 20px;
+            padding: 14px 18px;
             border-radius: 8px;
             font-weight: bold;
             cursor: pointer;
             width: 100%;
-            font-size: 1rem;
+            font-size: 0.98rem;
             transition: opacity 0.2s, transform 0.1s, box-shadow 0.2s;
             text-align: center;
             text-decoration: none;
             display: inline-block;
             box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
+            box-sizing: border-box;
         }
 
         .btn:hover {
@@ -287,17 +390,27 @@ HTML
             transform: translateY(1px);
         }
 
+        .btn-surprise {
+            background: linear-gradient(135deg, #ec4899, #8b5cf6);
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+        }
+
+        .btn-alt {
+            background: linear-gradient(135deg, var(--alt-btn), var(--alt-btn-hover));
+            color: #0f172a;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.25);
+        }
+
         .btn-link {
             background: linear-gradient(135deg, var(--success), var(--success-hover));
             color: #ffffff;
-            margin-bottom: 10px;
             box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
         }
 
         .btn-download {
             background: linear-gradient(135deg, var(--download-btn), var(--download-btn-hover));
             color: #ffffff;
-            margin-bottom: 10px;
             box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
         }
 
@@ -311,6 +424,34 @@ HTML
             background-color: var(--secondary-btn-hover);
         }
 
+        /* Ruleta */
+        #roulette-box {
+            display: none;
+            margin-top: 25px;
+            padding: 28px 20px;
+            background-color: #090d16;
+            border-radius: 12px;
+            border: 1px dashed var(--accent);
+            text-align: center;
+        }
+
+        .roulette-label {
+            font-size: 0.85rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .roulette-ticker {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--text-main);
+            min-height: 36px;
+            transition: transform 0.08s;
+        }
+
         #result-box {
             display: none;
             margin-top: 25px;
@@ -319,28 +460,58 @@ HTML
             border-radius: 12px;
             border: 1px solid var(--card-border);
             border-left: 4px solid var(--success);
-            animation: fadeIn 0.4s ease-out;
+            animation: popIn 0.38s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes popIn {
+            from { opacity: 0; transform: translateY(12px) scale(0.97); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .result-header {
             margin-bottom: 16px;
         }
 
+        .badges-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
         .match-badge {
             display: inline-block;
-            background: rgba(6, 78, 59, 0.8);
+            background: rgba(6, 78, 59, 0.85);
             color: #a7f3d0;
-            border: 1px solid rgba(34, 197, 94, 0.3);
+            border: 1px solid rgba(34, 197, 94, 0.4);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        .match-badge.medium {
+            background: rgba(120, 53, 15, 0.85);
+            color: #fde68a;
+            border-color: rgba(245, 158, 11, 0.4);
+        }
+
+        .pref-badge {
+            display: none;
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--accent);
+            border: 1px solid rgba(56, 189, 248, 0.35);
             padding: 4px 12px;
             border-radius: 20px;
             font-size: 0.8rem;
-            margin-bottom: 8px;
             font-weight: 600;
+        }
+
+        .pref-badge.exact-hit {
+            background: rgba(139, 92, 246, 0.22);
+            color: #ddd6fe;
+            border-color: rgba(139, 92, 246, 0.55);
         }
 
         .result-title {
@@ -353,30 +524,216 @@ HTML
         .result-desc {
             color: var(--accent);
             font-size: 1rem;
-            margin: 0;
+            margin: 0 0 8px 0;
         }
 
+        .meta-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .meta-pill {
+            background-color: #131c2e;
+            border: 1px solid #263349;
+            color: #cbd5e1;
+            font-size: 0.78rem;
+            padding: 3px 10px;
+            border-radius: 6px;
+        }
+
+        /* Tarjeta de Panel de Conocimiento */
+        .knowledge-panel {
+            background-color: #111827;
+            border: 1px solid #263349;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 16px;
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        @media (max-width: 540px) {
+            .knowledge-panel {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+        }
+
+        .knowledge-img-wrapper {
+            width: 130px;
+            min-width: 130px;
+            height: 175px;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #1e293b;
+            border: 1px solid var(--card-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .knowledge-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .knowledge-img-placeholder {
+            font-size: 2.5rem;
+            color: var(--text-muted);
+        }
+
+        .knowledge-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .knowledge-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .knowledge-tag {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #38bdf8;
+            background: rgba(56, 189, 248, 0.12);
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
+
+        .knowledge-summary {
+            margin: 0 0 10px 0;
+            color: #e2e8f0;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .knowledge-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            font-size: 0.82rem;
+        }
+
+        .knowledge-links a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .knowledge-links a:hover {
+            text-decoration: underline;
+        }
+
+        .skeleton-pulse {
+            animation: pulse 1.5s infinite ease-in-out;
+            color: var(--text-muted);
+            font-size: 0.88rem;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Caja ampliada: ¿Por qué te lo recomendamos? */
         .result-explanation {
             background-color: var(--card-bg);
-            padding: 16px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 16px;
             border: 1px solid var(--card-border);
         }
 
         .result-explanation h4 {
-            margin: 0 0 8px 0;
+            margin: 0 0 12px 0;
             color: var(--accent);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        .result-explanation p {
-            margin: 0;
+        .reason-main-text {
+            margin: 0 0 14px 0;
+            color: #e2e8f0;
+            font-size: 0.96rem;
+            line-height: 1.6;
+        }
+
+        .reason-breakdown {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+            padding-top: 12px;
+            border-top: 1px solid #1e293b;
+        }
+
+        .reason-point {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 0.88rem;
             color: #cbd5e1;
-            font-size: 0.95rem;
-            line-height: 1.5;
+            line-height: 1.45;
+            background: rgba(15, 23, 42, 0.55);
+            padding: 9px 12px;
+            border-radius: 7px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .reason-point.highlight-criteria {
+            border-left-color: #a855f7;
+            background: rgba(139, 92, 246, 0.12);
+        }
+
+        .reason-point strong {
+            color: #f8fafc;
+        }
+
+        .reaction-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .reaction-btn {
+            flex: 1;
+            background-color: #131c2e;
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .reaction-btn:hover {
+            border-color: var(--accent);
+            transform: translateY(-1px);
+        }
+
+        .reaction-btn.liked {
+            background-color: rgba(236, 72, 153, 0.18);
+            border-color: var(--pink-btn);
+            color: #f9a8d4;
         }
 
         .actions-group {
@@ -388,34 +745,42 @@ HTML
 </head>
 <body>
 
-    <!-- Overlay y Panel Lateral de Historial -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- Overlay y Panel Lateral de Historial y Favoritos -->
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <h3>📜 Historial Semanal</h3>
-            <button class="close-sidebar" onclick="toggleSidebar()">&times;</button>
+            <h3>📚 Tu Colección</h3>
+            <button class="close-sidebar" onclick="toggleSidebar()">×</button>
         </div>
-        <div class="history-list" id="historyListContainer">
-            <div class="empty-history">Aún no hay recomendaciones guardadas en tu historial. ¡Generá una para empezar!</div>
+        <div class="sidebar-tabs">
+            <button class="tab-btn active" id="tab-history" onclick="switchSidebarTab('history')">📜 Historial</button>
+            <button class="tab-btn" id="tab-favorites" onclick="switchSidebarTab('favorites')">❤️ Favoritos</button>
         </div>
+        <div class="history-list" id="historyListContainer"></div>
     </div>
 
-    <!-- Barra superior con botón de menú -->
+    <!-- Barra superior -->
     <div class="top-bar">
-        <button class="menu-btn" onclick="toggleSidebar()" title="Abrir Historial">☰</button>
+        <button class="menu-btn" onclick="toggleSidebar()" title="Abrir Historial y Favoritos">
+            ☰
+            <span class="fav-counter-dot" id="fav-dot">0</span>
+        </button>
         <header>
             <h1>✨ SmartMatch</h1>
-            <p>Tu recomendador inteligente</p>
+            <p>Tu recomendador inteligente de precisión</p>
         </header>
-        <div style="width: 44px;"></div> <!-- Elemento fantasma para equilibrar el header -->
+        <div style="width: 44px;"></div>
     </div>
 
     <div class="container">
         <div class="form-group">
             <label for="category-select">¿Qué estás buscando hoy?</label>
-            <select id="category-select">
+            <select id="category-select" onchange="updateQuickTags()">
+                <option value="music">🎵 Música / Canción</option>
                 <option value="movie">🎬 Película</option>
-                <option value="music">🎵 Música / Playlist</option>
+                <option value="game">🎮 Videojuego</option>
             </select>
         </div>
 
@@ -446,25 +811,66 @@ HTML
         </div>
 
         <div class="form-group">
-            <label for="extra-input">¿Tenés alguna preferencia o detalle adicional? (Opcional):</label>
-            <textarea id="extra-input" placeholder="Ej: Prefiero producciones recientes, que la banda sonora sea clave, o lo que quieras aclarar..."></textarea>
+            <label for="extra-input">¿Tenés alguna preferencia o detalle adicional? (Criterio clave):</label>
+            <span class="helper-hint">Podés pedir datos exactos: ej. "que ganó un Oscar", "canción del 2000", "vendió más de 100000 copias", "de los 80", "argentina", "gratis"...</span>
+            <textarea id="extra-input" placeholder="Ej: Película que ganó un Oscar, canción del año 2000, juego que vendió más de 100000 copias..."></textarea>
+            <div class="quick-tags" id="quick-tags-container"></div>
         </div>
 
-        <button class="btn" id="generate-btn" onclick="generateRecommendation()">Generar Recomendación Mágica</button>
+        <div class="main-buttons-row">
+            <button class="btn" id="generate-btn" onclick="startMatchAnimation(false, false)">✨ Buscar mi Match</button>
+            <button class="btn btn-surprise" onclick="startMatchAnimation(false, true)" title="Elige un estado de ánimo al azar por vos">🎰 ¡Sorprendeme!</button>
+        </div>
 
+        <!-- Animación de Ruleta -->
+        <div id="roulette-box">
+            <div class="roulette-label">🎰 Filtrando catálogo y verificando criterios específicos...</div>
+            <div class="roulette-ticker" id="roulette-ticker">Buscando...</div>
+        </div>
+
+        <!-- Resultado -->
         <div id="result-box">
             <div class="result-header">
-                <span class="match-badge">Match Perfecto (99%)</span>
+                <div class="badges-row">
+                    <span class="match-badge" id="res-badge">Match: 94%</span>
+                    <span class="pref-badge" id="res-pref-badge">🎯 Filtrado por tu preferencia</span>
+                </div>
                 <h2 class="result-title" id="res-title">Título</h2>
                 <p class="result-desc" id="res-desc">Descripción corta...</p>
+                <div class="meta-pills" id="res-meta-pills"></div>
             </div>
 
+            <!-- Panel de Información de Google / Web + Imagen -->
+            <div class="knowledge-panel" id="knowledge-panel">
+                <div class="knowledge-img-wrapper" id="knowledge-img-box">
+                    <span class="knowledge-img-placeholder">🌐</span>
+                </div>
+                <div class="knowledge-content">
+                    <div class="knowledge-header">
+                        <span class="knowledge-tag">🌐 Ficha informativa en vivo</span>
+                    </div>
+                    <p class="knowledge-summary skeleton-pulse" id="knowledge-summary">Obteniendo información e imagen de la web...</p>
+                    <div class="knowledge-links">
+                        <a id="knowledge-google-link" href="#" target="_blank">🔎 Ver ficha completa en Google</a>
+                        <a id="knowledge-wiki-link" href="#" target="_blank" style="display:none;">📖 Leer artículo completo</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección ampliada de explicación -->
             <div class="result-explanation">
                 <h4>💡 ¿Por qué te lo recomendamos?</h4>
-                <p id="res-reason">Explicación detallada...</p>
+                <p class="reason-main-text" id="res-reason">Explicación detallada...</p>
+                <div class="reason-breakdown" id="res-breakdown"></div>
+            </div>
+
+            <div class="reaction-bar">
+                <button class="reaction-btn" id="btn-like" onclick="toggleFavoriteCurrent()">🤍 Guardar en Favoritos</button>
+                <button class="reaction-btn" onclick="dislikeAndReroll()">👎 No es lo mío, dame otra</button>
             </div>
 
             <div class="actions-group">
+                <button class="btn btn-alt" onclick="startMatchAnimation(true, false)">🎲 Probar otra opción con estos criterios</button>
                 <a id="res-link" href="#" target="_blank" class="btn btn-link">🔗 Buscar o ver contenido online</a>
                 <button class="btn btn-download" onclick="downloadRecommendationHTML()">📥 Descargar esta recomendación (HTML)</button>
                 <button class="btn btn-back" onclick="resetForm()">← Cambiar mi elección</button>
@@ -473,145 +879,933 @@ HTML
     </div>
 
     <script>
-        const recommendationsDB = {
-            movie: {
-                relax: { title: "Supercool", desc: "Comedia ligera y divertida sobre la amistad adolescente.", reason: "Elegimos esta opción porque querés desconectar sin exigencias mentales. Su humor ágil, honesto y sin pretensiones es el antídoto perfecto para apagar la cabeza un rato y reírte con amigos.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Supercool" },
-                energy: { title: "Spider-Man: Un nuevo universo", desc: "Acción visualmente deslumbrante con un ritmo imparable.", reason: "Calza justo con tu búsqueda de energía: el estilo visual dinámico, la explosión de colores y la adrenalina de la trama te van a activar al instante con una vibración única.", searchUrl: "https://www.google.com/search?q=ver+Spider-Man+Un+nuevo+universo" },
-                mindfuck: { title: "Memento", desc: "Thriller psicológico con una estructura en reversa.", reason: "Como buscás algo complejo que te vuele la cabeza, esta obra maestra juega con tu percepción temporal, obligándote a armar el rompecabezas junto al protagonista.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Memento" },
-                sad: { title: "Her", desc: "Drama íntimo y reflexivo sobre la soledad moderna.", reason: "Se alinea de forma impecable con tu estado de ánimo: ofrece un espacio melancólico, visualmente hermoso y sumamente humano para transitar la emoción.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Her+Spike+Jonze" },
-                focus: { title: "Red Social (The Social Network)", desc: "Drama biográfico dinámico con diálogos veloces.", reason: "Te mantiene enfocado y activo gracias al ritmo vertiginoso de su narrativa, su guion brillante y una banda sonora electrónica envolvente.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Red+Social" },
-                romantic: { title: "Cuestión de Tiempo (About Time)", desc: "Romance con viajes en el tiempo y lecciones de vida.", reason: "Mezcla dulzura, romance real y una reflexión profunda y conmovedora sobre aprender a valorar los pequeños momentos del día a día.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Cuestion+de+Tiempo" },
-                fear: { title: "El Conjuro", desc: "Terror sobrenatural con atmósfera súper tensa.", reason: "Cumple con creces tu cuota de adrenalina y sustos bien construidos, manteniéndote al borde del sillón con una dirección impecable.", searchUrl: "https://www.google.com/search?q=ver+pelicula+El+Conjuro" },
-                laugh: { title: "¿Qué pasó ayer?", desc: "Comedia descontrolada sobre una despedida salvaje.", reason: "Garantiza risas continuas con una sucesión de situaciones absurdas y caóticas, ideales para desconectar por completo de la rutina.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Que+paso+ayer" },
-                nostalgic: { title: "Volver al Futuro", desc: "La aventura clásica de ciencia ficción ochentera.", reason: "Te devuelve esa sensación de cine clásico aventurero, con carisma puro, un guion perfecto y una cuota de nostalgia reconfortante.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Volver+al+Futuro" },
-                epic: { title: "El Señor de los Anillos: La Comunidad del Anillo", desc: "Fantasía épica magistral con mundos inmensos.", reason: "Satisface tu sed de grandiosidad y aventura con un universo profundamente inmersivo, personajes inolvidables y una escala monumental.", searchUrl: "https://www.google.com/search?q=ver+El+Senor+de+los+Anillos+Comunidad+del+Anillo" },
-                party: { title: "Proyecto X", desc: "La fiesta descontrolada definitiva llevada al cine.", reason: "Te contagia el caos festivo, la locura incontrolable y la energía vibrante de una noche épica entre amigos.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Proyecto+X" },
-                lonely_night: { title: "Lost in Translation", desc: "Atmósfera nocturna en Tokio, melancolía y conexión única.", reason: "Acompaña perfecto esas horas de desvelo nocturno con una estética melancólica única, silencios elocuentes y una química sutil.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Lost+in+Translation" },
-                angry: { title: "John Wick", desc: "Acción furiosa, coreografías de combate y venganza pura.", reason: "Canaliza toda esa energía intensa a través de secuencias de acción hiperestilizadas, coreografías impecables y un ritmo imparable.", searchUrl: "https://www.google.com/search?q=ver+pelicula+John+Wick" },
-                sunday_lazy: { title: "El Gran Pez (Big Fish)", desc: "Un cuento fantástico lleno de magia, color y emoción.", reason: "Es el equivalente cinematográfico perfecto a estar arropado en la cama un domingo a la tarde: una historia tierna, mágica y conmovedora.", searchUrl: "https://www.google.com/search?q=ver+pelicula+El+Gran+Pez" },
-                cooking_cleaning: { title: "Ratatouille", desc: "Una joya animada sobre la pasión por la cocina y el arte.", reason: "Te acompaña con una alegría cálida y optimista mientras te ponés a ordenar o cocinar, inspirándote con su amor por los detalles.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Ratatouille" },
-                curious: { title: "Interstellar", desc: "Ciencia ficción ambiciosa sobre agujeros de gusano y física.", reason: "Alimenta tu curiosidad intelectual con conceptos científicos alucinantes, una escala cósmica imponente y un despliegue visual grandioso.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Interstellar" },
-                badass: { title: "Mad Max: Furia en el Camino", desc: "Persecución ininterrumpida de puro músculo y motor.", reason: "Te hace sentir totalmente imparable gracias a una descarga de adrenalina audiovisual brutal y un diseño de acción sobresaliente.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Mad+Max+Furia+en+el+Camino" },
-                cozy_rain: { title: "Knives Out (Entre Navajas y Secretos)", desc: "Misterio de mansión, gabardinas y humor inteligente.", reason: "Es un refugio acogedor para ver mientras afuera llueve: un misterio clásico de detectives modernizado con muchísimo estilo e ironía.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Knives+Out" },
-                roadtrip: { title: "Pequeña Miss Sunshine", desc: "Comedia dramática rutera entrañable y bizarra.", reason: "Tiene el espíritu rutero perfecto para acompañar un viaje mental, combinando momentos desopilantes con una ternura familiar enorme.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Pequena+Miss+Sunshine" },
-                existential: { title: "Soul", desc: "Una animación profunda sobre el propósito de estar vivo.", reason: "Dialoga directamente con tus preguntas existenciales más profundas con una sensibilidad infinita, belleza visual y reflexiones memorables.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Soul+Disney" }
-            },
-            music: {
-                relax: { title: "Lo-Fi Beats / Chillhop Session", desc: "Melodías suaves de piano, vinilo y ritmos pausados.", reason: "Elimina por completo el ruido mental y genera un entorno sonoro cálido, hogareño y sin sobresaltos para que puedas desconectar.", searchUrl: "https://www.youtube.com/results?search_query=lofi+hip+hop+beats+to+relax+study" },
-                energy: { title: "Synthwave & Cyberpunk Workout", desc: "Sintetizadores potentes y pulso electrónico sostenido.", reason: "Diseñado para darte el impulso que necesitás: la pulsación constante de los sintetizadores eleva tu nivel de activación física y mental.", searchUrl: "https://www.youtube.com/results?search_query=synthwave+cyberpunk+workout+mix" },
-                mindfuck: { title: "Progressive Rock / Pink Floyd Style", desc: "Texturas psicodélicas, capas complejas y largos pasajes.", reason: "Satisface tu necesidad de estímulos elaborados. Cada escucha revela detalles ocultos en los arreglos que estimulan fuertemente tu mente.", searchUrl: "https://www.youtube.com/results?search_query=pink+floyd+full+album+playlist" },
-                sad: { title: "Indie Folk Acústico", desc: "Voces cercanas, guitarras de madera y letras sinceras.", reason: "Acompaña tu estado de ánimo con respeto absoluto; no busca forzar una falsa alegría, sino brindarte un refugio sonoro cálido y honesto.", searchUrl: "https://www.youtube.com/results?search_query=sad+indie+folk+playlist+acoustic" },
-                focus: { title: "Deep Focus Ambient & Binaural Beats", desc: "Paisajes sonoros continuos para concentración profunda.", reason: "Elimina distracciones externas del entorno y estimula de forma natural las ondas cerebrales asociadas al foco y la productividad.", searchUrl: "https://www.youtube.com/results?search_query=deep+focus+ambient+binaural+beats" },
-                romantic: { title: "R&B Slow Jams & Jazz Nocturno", desc: "Voces suaves, bajos profundos y atmósfera íntima.", reason: "Crea un clima sofisticado, elegante y sumamente cercano, ideal para acompañar un momento en pareja o una cena especial.", searchUrl: "https://www.youtube.com/results?search_query=smooth+rnb+slow+jams+playlist" },
-                fear: { title: "Dark Ambient & Horror Soundtracks", desc: "Pistas oscuras cargadas de tensión industrial y suspenso.", reason: "Genera una atmósfera inquietante, misteriosa y absorbente que te transporta de inmediato al terreno de un thriller psicológico.", searchUrl: "https://www.youtube.com/results?search_query=dark+ambient+horror+soundtrack+playlist" },
-                laugh: { title: "Funk Alegre de los 70s & Disco Hits", desc: "Bajos marcados, metales festivos y energía bailable.", reason: "Eleva el humor de inmediato gracias a sus ritmos ultra positivos, alegres y sumamente contagiosos que invitan a moverse.", searchUrl: "https://www.youtube.com/results?search_query=70s+funk+and+disco_hits_playlist" },
-                nostalgic: { title: "Classic Rock & Pop Hits de los 80s/90s", desc: "Los grandes himnos dorados de décadas pasadas.", reason: "Despierta recuerdos entrañables y te conecta instantáneamente con una época dorada de la música que marcó generaciones.", searchUrl: "https://www.youtube.com/results?search_query=80s+90s+classic+hits+playlist" },
-                epic: { title: "Orquestal Cinematográfica / Epic Music", desc: "Coros colosales, percusión imponente y cuerdas heroicas.", reason: "Te hace sentir dentro de una gran aventura cinematográfica, elevando la grandiosidad y la épica de cualquier momento.", searchUrl: "https://www.youtube.com/results?search_query=epic+orchestral+cinematic+music+playlist" },
-                party: { title: "Reggaetón & Electro Latino Hits", desc: "El ritmo urbano intenso para precalentar la previa.", reason: "Te enciende el ambiente al instante y te prepara con toda la energía y el ritmo necesario para salir a bailar con amigos.", searchUrl: "https://www.youtube.com/results?search_query=reggaeton_hits_playlist" },
-                lonely_night: { title: "Dream Pop & Shoegaze Nocturno", desc: "Guitarrazos con efectos espaciales y voces etéreas.", reason: "Armoniza de forma perfecta con la soledad nocturna, las luces de la ciudad y el flujo constante de pensamientos.", searchUrl: "https://www.youtube.com/results?search_query=dream+pop+shoegaze+playlist" },
-                angry: { title: "Nu Metal & Hard Rock Pesado", desc: "Guitarras distorsionadas, potencia y furia sónica.", reason: "Canaliza toda tu intensidad y te permite descargar tensiones de manera totalmente catártica, segura y liberadora.", searchUrl: "https://www.youtube.com/results?search_query=nu+metal+hard+rock+playlist" },
-                sunday_lazy: { title: "Jazz Acústico de Café & Bossa Nova", desc: "Acordes suaves de guitarra y vientos relajantes.", reason: "Ideal para acompañar la modorra del domingo con un nivel de elegancia relajada, calidez y frescura incomparable.", searchUrl: "https://www.youtube.com/results?search_query=bossa+nova+jazz+cafe+playlist" },
-                cooking_cleaning: { title: "Pop Energético de los 2000s", desc: "Hits hiper bailables y cantables a todo volumen.", reason: "Te inyecta la chispa justa de alegría para que hacer tareas en la casa se convierta en un momento divertido.", searchUrl: "https://www.youtube.com/results?search_query=2000s+pop+hits+playlist" },
-                curious: { title: "Electronica Experimental / IDM", desc: "Sonidos futuristas, texturas raras y beats complejos.", reason: "Satisface tu costado más curioso con paisajes sonoros innovadores que desafían al oído y abren la mente.", searchUrl: "https://www.youtube.com/results?search_query=intelligent+dance+music+IDM+ambient" },
-                badass: { title: "Hip Hop / Rap Urbano Pesado", desc: "Bajos profundos, flows agresivos y mucha actitud.", reason: "Te inyecta una dosis enorme de confianza y te coloca mentalmente en la postura de protagonista absoluto de película de acción.", searchUrl: "https://www.youtube.com/results?search_query=hard+trap+hip+hop+playlist" },
-                cozy_rain: { title: "Jazz Lento con Sonido de Lluvia", desc: "Clásicos suaves acompañados de tormenta real.", reason: "Construye un refugio auditivo sumamente acogedor y reconfortante para disfrutar de los días grises y fríos.", searchUrl: "https://www.youtube.com/results?search_query=jazz+rain+lofi+playlist" },
-                roadtrip: { title: "Indie Rock Rutero / Classic Rock Americano", desc: "Canciones ideales para llevar el brazo en la ventanilla.", reason: "Tiene el ADN exacto del asfalto, los viajes largos, la ruta abierta y la sensación de libertad absoluta.", searchUrl: "https://www.youtube.com/results?search_query=indie+rock+road+trip+playlist" },
-                existential: { title: "Post-Rock Atmosférico (Sigur Rós style)", desc: "Crescendos instrumentales colosales y emotivos.", reason: "Traduce fielmente en música esa marea de pensamientos profundos y existenciales que aparecen en los momentos de introspección.", searchUrl: "https://www.youtube.com/results?search_query=atmospheric+post+rock+playlist" }
-            }
+        const catalogDB = {
+            music: [
+                // RELAX
+                { mood: "relax", year: 2000, decade: "2000s", awards: ["Premio Grammy"], sales: "Multi-platino", wikiQuery: "Yellow (canción de Coldplay)", tags: ["tranquila", "suave", "acustica", "ingles", "pop", "chill", "coldplay", "2000", "grammy"], title: "Coldplay - Yellow (2000)", desc: "Melodía suave, guitarra cálida y atmósfera de paz del álbum Parachutes.", reason: "Lanzada en el año 2000 dentro del álbum ganador del Grammy 'Parachutes', su tempo pausado y acordes cálidos bajan las revoluciones al instante.", vibeNote: "Tempo lento y envolvente ideal para bajar la ansiedad.", idealMoment: "Descansar con auriculares o cerrar los ojos unos minutos.", searchUrl: "https://www.youtube.com/results?search_query=Coldplay+Yellow+2000" },
+                { mood: "relax", year: 2015, decade: "2010s", awards: ["Disco de Platino"], sales: "Más de 2 millones de copias", wikiQuery: "Aurora (cantante)", tags: ["tranquila", "suave", "acustica", "ingles", "pop", "aurora", "eterea", "indie"], title: "AURORA - Runaway", desc: "Pop etéreo, voz cristalina y atmósfera mágica.", reason: "Combina arreglos minimalistas con una voz celestial que transmite serenidad y te transporta lejos del ruido cotidiano.", vibeNote: "Sonido cristalino, orgánico y reconfortante.", idealMoment: "Desconectar de la rutina con una sensación de ligereza.", searchUrl: "https://www.youtube.com/results?search_query=AURORA+Runaway" },
+                { mood: "relax", year: 1999, decade: "90s", awards: ["Premio Gardel"], sales: "Disco de Platino en Argentina", wikiQuery: "Gustavo Cerati", tags: ["tranquila", "suave", "acustica", "espanol", "nacional", "argentina", "rock", "gustavo cerati", "90s"], title: "Gustavo Cerati - Puente / Lago en el Cielo", desc: "Sonido atmosférico, suave y envolvente del rock nacional.", reason: "Las texturas de guitarra de Cerati y su lírica poética generan una sensación de vuelo sereno y bienestar profundo en español.", vibeNote: "Atmósfera espacial y calidez melódica.", idealMoment: "Relajarte escuchando uno de los mejores sonidos en español.", searchUrl: "https://www.youtube.com/results?search_query=Gustavo+Cerati+Lago+en+el+Cielo" },
+                { mood: "relax", year: 2004, decade: "2000s", awards: ["Premio Oscar", "Latin Grammy"], sales: "Clásico premiado", wikiQuery: "Jorge Drexler", tags: ["tranquila", "suave", "acustica", "espanol", "pop", "jorge drexler", "latino", "oscar", "2000s"], title: "Jorge Drexler - Todo se Transforma / Al Otro Lado del Río", desc: "Guitarra suave, letra poética y cadencia relajante.", reason: "La calidez de su guitarra acústica y sus letras reflexivas calman la mente con un ritmo amable y cercano.", vibeNote: "Acústico íntimo, cálido y sin sobresaltos.", idealMoment: "Acompañar un descanso tranquilo con letras inteligentes.", searchUrl: "https://www.youtube.com/results?search_query=Jorge+Drexler+Todo+se+Transforma" },
+                { mood: "relax", year: 2002, decade: "2000s", awards: ["5 Premios Grammy"], sales: "Más de 27 millones de copias", wikiQuery: "Norah Jones", tags: ["tranquila", "suave", "jazz", "piano", "ingles", "norah jones", "grammy", "2000s"], title: "Norah Jones - Don't Know Why (2002)", desc: "Jazz pop suave con piano aterciopelado y voz cálida.", reason: "Ganadora del Grammy a Grabación del Año, su piano sutil y timbre relajado disuelven cualquier tensión acumulada.", vibeNote: "Jazz suave, cálido y aterciopelado.", idealMoment: "Crear un clima de calma total en casa.", searchUrl: "https://www.youtube.com/results?search_query=Norah+Jones+Dont+Know+Why" },
+                { mood: "relax", year: 2005, decade: "2000s", awards: ["Disco Multi-Platino"], sales: "Más de 10 millones de copias", wikiQuery: "Jack Johnson", tags: ["tranquila", "suave", "acustica", "ingles", "playa", "chill", "2000s"], title: "Jack Johnson - Banana Pancakes / Better Together", desc: "Folk acústico playero con vibra despreocupada.", reason: "Su ritmo relajado de guitarra transmite la paz de una tarde sin reloj ni obligaciones.", vibeNote: "Acústico ligero y lleno de paz.", idealMoment: "Desconectarte por completo de las preocupaciones.", searchUrl: "https://www.youtube.com/results?search_query=Jack+Johnson+Better+Together" },
+
+                // ENERGY
+                { mood: "energy", year: 2000, decade: "2000s", awards: ["Premio Grammy"], sales: "Más de 11 millones de copias", wikiQuery: "Beautiful Day", tags: ["energia", "ingles", "rock", "pop", "u2", "2000", "grammy", "alegre"], title: "U2 - Beautiful Day (2000)", desc: "Himno optimista y expansivo que abrió el nuevo milenio.", reason: "Estrenada en el año 2000 y ganadora de 3 premios Grammy, su explosión instrumental en el estribillo levanta la energía al instante.", vibeNote: "Euforia luminosa y optimismo del año 2000.", idealMoment: "Arrancar el día con energía renovada.", searchUrl: "https://www.youtube.com/results?search_query=U2+Beautiful+Day+2000" },
+                { mood: "energy", year: 1978, decade: "70s", awards: ["Salón de la Fama Grammy"], sales: "Más de 7 millones de copias", wikiQuery: "Queen", tags: ["energia", "ingles", "rock", "clasico", "queen", "alegre", "70s"], title: "Queen - Don't Stop Me Now", desc: "El himno definitivo de alegría y energía pura.", reason: "Construida con una aceleración progresiva, piano vibrante y la voz explosiva de Freddie Mercury.", vibeNote: "Euforia pura y velocidad imparable.", idealMoment: "Subir el ánimo al máximo en menos de un minuto.", searchUrl: "https://www.youtube.com/results?search_query=Queen+Dont+Stop+Me+Now" },
+                { mood: "energy", year: 2019, decade: "2010s", awards: ["Récord Billboard #1"], sales: "Más de 20 millones de copias", wikiQuery: "The Weeknd", tags: ["energia", "ingles", "pop", "moderna", "electronica", "the weeknd", "80s"], title: "The Weeknd - Blinding Lights", desc: "Pop electrónico ochentero súper veloz y motivador.", reason: "Sus sintetizadores veloces y batería contundente generan una sensación de impulso constante.", vibeNote: "Synth-pop acelerado y magnético.", idealMoment: "Entrenar, caminar rápido o activarte ya.", searchUrl: "https://www.youtube.com/results?search_query=The+Weeknd+Blinding+Lights" },
+                { mood: "energy", year: 2019, decade: "2010s", awards: ["Premio Gardel"], sales: "Multi-platino en Argentina", wikiQuery: "Wos", tags: ["energia", "espanol", "nacional", "argentina", "rock", "wos", "urbano"], title: "WOS - Canguro / Arrancármelo", desc: "Fuerza, letra potente y energía del sonido argentino actual.", reason: "Mezcla bases potentes con una interpretación cargada de convicción que te inyecta adrenalina.", vibeNote: "Potencia lírica y ritmo explosivo en español.", idealMoment: "Motivarte con sonido argentino actual.", searchUrl: "https://www.youtube.com/results?search_query=WOS+Canguro" },
+                { mood: "energy", year: 2000, decade: "2000s", awards: ["MTV VMA"], sales: "Más de 8 millones de copias", wikiQuery: "It's My Life (canción de Bon Jovi)", tags: ["energia", "ingles", "rock", "bon jovi", "2000", "clasico"], title: "Bon Jovi - It's My Life (2000)", desc: "Clásico del rock arena del año 2000 lleno de determinación.", reason: "Su riff con talk-box y estribillo explosivo del año 2000 son combustible puro para motivarte.", vibeNote: "Rock potente y actitud imparable del 2000.", idealMoment: "Necesitás un empujón fuerte de energía.", searchUrl: "https://www.youtube.com/results?search_query=Bon+Jovi+Its+My+Life+2000" },
+
+                // MINDFUCK
+                { mood: "mindfuck", year: 2013, decade: "2010s", awards: ["Álbum del Año Grammy"], sales: "Más de 5 millones de copias", wikiQuery: "Daft Punk", tags: ["compleja", "ingles", "electronica", "pop", "daft punk", "grammy"], title: "Daft Punk - Instant Crush / Veridis Quo", desc: "Electrónica melancólica y sofisticada con sintetizadores únicos.", reason: "Cada escucha revela nuevas capas de vocoder, armonías y arreglos sutiles que hipnotizan la mente.", vibeNote: "Producción detallada y atmósfera hipnótica.", idealMoment: "Escuchar con buenos auriculares prestando atención.", searchUrl: "https://www.youtube.com/results?search_query=Daft+Punk+Instant+Crush" },
+                { mood: "mindfuck", year: 1979, decade: "70s", awards: ["Salón de la Fama Rock"], sales: "Más de 30 millones de copias", wikiQuery: "Pink Floyd", tags: ["compleja", "ingles", "rock", "clasico", "psicodelica", "pink floyd", "70s"], title: "Pink Floyd - Comfortably Numb / Time", desc: "Rock psicodélico clásico con solos y atmósferas envolventes.", reason: "Sus cambios de estructura, efectos sonoros y solos legendarios construyen un viaje mental completo.", vibeNote: "Psicodelia progresiva y viaje sonoro.", idealMoment: "Dejarte llevar por una obra maestra compleja.", searchUrl: "https://www.youtube.com/results?search_query=Pink+Floyd+Comfortably+Numb" },
+                { mood: "mindfuck", year: 2000, decade: "2000s", awards: ["Premio Grammy"], sales: "Más de 4 millones de copias", wikiQuery: "Radiohead", tags: ["compleja", "ingles", "rock", "alternativa", "radiohead", "2000", "grammy"], title: "Radiohead - Everything In Its Right Place (2000)", desc: "Electrónica experimental y rock vanguardista del álbum Kid A.", reason: "Lanzada en el año 2000, rompió todos los moldes del rock convencional con sintetizadores hipnóticos.", vibeNote: "Experimental, intrigante y vanguardista.", idealMoment: "Explorar sonidos fuera de lo común.", searchUrl: "https://www.youtube.com/results?search_query=Radiohead+Everything+In+Its+Right+Place+2000" },
+                { mood: "mindfuck", year: 1982, decade: "80s", awards: ["Premio Gardel a la Trayectoria"], sales: "Clásico del Rock Nacional", wikiQuery: "Charly García", tags: ["compleja", "espanol", "nacional", "argentina", "rock", "charly garcia", "80s"], title: "Charly García - No Soy un Extraño / Yendo de la Cama al Living", desc: "Arreglos brillantes y letras profundas del genio argentino.", reason: "Combina armonías sofisticadas, cambios rítmicos y letras llenas de doble lectura.", vibeNote: "Genialidad armónica y lírica en español.", idealMoment: "Apreciar composición compleja en nuestro idioma.", searchUrl: "https://www.youtube.com/results?search_query=Charly+Garcia+Yendo+de+la+Cama+al+Living" },
+
+                // SAD
+                { mood: "sad", year: 2012, decade: "2010s", awards: ["Multi-Platino"], sales: "Más de 10 millones de copias", wikiQuery: "Lana Del Rey", tags: ["triste", "bajon", "ingles", "pop", "lana del rey", "melancolica", "suave"], title: "Lana Del Rey - Summertime Sadness / Born To Die", desc: "Pop cinematográfico, melancólico y envolvente.", reason: "Cuerdas cinematográficas y una interpretación nostálgica que valida la tristeza sin juzgarla.", vibeNote: "Melancolía estética y envolvente.", idealMoment: "Acompañar un día gris con sensibilidad.", searchUrl: "https://www.youtube.com/results?search_query=Lana+Del+Rey+Summertime+Sadness" },
+                { mood: "sad", year: 2011, decade: "2010s", awards: ["Premio Grammy"], sales: "Más de 17 millones de copias", wikiQuery: "Adele", tags: ["triste", "bajon", "piano", "ingles", "pop", "adele", "suave", "grammy"], title: "Adele - Someone Like You", desc: "Piano y una de las voces más emotivas de la música.", reason: "La desnudez del piano junto a su potencia vocal permiten soltar emociones guardadas.", vibeNote: "Catarsis emocional a puro piano y voz.", idealMoment: "Desahogarte cantando o escuchando en silencio.", searchUrl: "https://www.youtube.com/results?search_query=Adele+Someone+Like+You" },
+                { mood: "sad", year: 1992, decade: "90s", awards: ["Álbum más vendido en Argentina"], sales: "Más de 1.1 millones de copias", wikiQuery: "Fito Páez", tags: ["triste", "bajon", "espanol", "nacional", "argentina", "rock", "fito paez", "90s"], title: "Fito Páez - Un Vestido y un Amor / El Amor Después del Amor", desc: "Una de las baladas más sentidas y hermosas en español.", reason: "Su letra honesta y melodía íntima acompañan el corazón con una calidez única.", vibeNote: "Emoción genuina y poesía en español.", idealMoment: "Conectar con tus sentimientos en tu idioma.", searchUrl: "https://www.youtube.com/results?search_query=Fito+Paez+Un+Vestido+y+un+Amor" },
+                { mood: "sad", year: 2000, decade: "2000s", awards: ["Premio Grammy"], sales: "Más de 6 millones de copias", wikiQuery: "Trouble (canción de Coldplay)", tags: ["triste", "bajon", "piano", "ingles", "pop", "coldplay", "2000"], title: "Coldplay - Trouble (2000)", desc: "Balada melancólica de piano del año 2000.", reason: "Con un piano minimalista y letra introspectiva del año 2000, acompaña los días grises con mucha calidez.", vibeNote: "Piano melancólico e íntimo del 2000.", idealMoment: "Bajar la guardia y conectar con lo que sentís.", searchUrl: "https://www.youtube.com/results?search_query=Coldplay+Trouble+2000" },
+
+                // FOCUS
+                { mood: "focus", year: 2004, decade: "2000s", awards: ["Disco de Oro"], sales: "Más de 100.000 copias", wikiQuery: "Ludovico Einaudi", tags: ["estudiar", "concentracion", "instrumental", "piano", "tranquila", "sin letra", "2000s"], title: "Ludovico Einaudi - Nuvole Bianche / Experience", desc: "Piano instrumental moderno limpio y emotivo.", reason: "Al carecer de letra no compite con tu lectura o escritura, mientras sus patrones repetitivos mantienen el cerebro enfocado.", vibeNote: "Piano minimalista ideal para el flujo mental.", idealMoment: "Estudiar, leer o trabajar sin distracciones.", searchUrl: "https://www.youtube.com/results?search_query=Ludovico+Einaudi+Nuvole+Bianche+study" },
+                { mood: "focus", year: 2017, decade: "2010s", awards: ["Fenómeno Streaming"], sales: "Millones de oyentes", wikiQuery: "Lo-fi", tags: ["estudiar", "concentracion", "instrumental", "lofi", "tranquila", "beats"], title: "Lofi Girl - Beats to Relax/Study", desc: "Bases instrumentales suaves y constantes.", reason: "Enmascara los ruidos ambientales con un pulso estable que ayuda a sostener la atención por horas.", vibeNote: "Beats constantes sin picos abruptos.", idealMoment: "Sesiones largas frente a la compu o apuntes.", searchUrl: "https://www.youtube.com/results?search_query=lofi+hip+hop+radio+beats+to+relax+study" },
+
+                // ROMANTIC
+                { mood: "romantic", year: 2010, decade: "2010s", awards: ["Premio Grammy"], sales: "Más de 15 millones de copias", wikiQuery: "Bruno Mars", tags: ["romantica", "pareja", "ingles", "pop", "bruno mars", "suave", "grammy"], title: "Bruno Mars - Just The Way You Are / Die With A Smile", desc: "Pop romántico lleno de sentimiento y melodía.", reason: "Combina letras dedicables con arreglos cálidos y elegantes que crean un clima especial al instante.", vibeNote: "Romance moderno elegante y emotivo.", idealMoment: "Compartir una cena o charla en pareja.", searchUrl: "https://www.youtube.com/results?search_query=Bruno+Mars+Die+With+A+Smile" },
+                { mood: "romantic", year: 1997, decade: "90s", awards: ["Premio Grammy"], sales: "Más de 100 millones de discos", wikiQuery: "Luis Miguel", tags: ["romantica", "pareja", "espanol", "clasico", "luis miguel", "bolero", "90s"], title: "Luis Miguel - Por Debajo de la Mesa / La Incondicional", desc: "Los boleros y baladas más icónicos en español.", reason: "Orquestación clásica, romanticismo atemporal y una interpretación que transforma cualquier ambiente.", vibeNote: "Clásico romántico insuperable en español.", idealMoment: "Noche especial con atmósfera cálida.", searchUrl: "https://www.youtube.com/results?search_query=Luis+Miguel+La+Incondicional" },
+                { mood: "romantic", year: 2021, decade: "2020s", awards: ["Latin Grammy"], sales: "Multi-platino", wikiQuery: "Sebastián Yatra", tags: ["romantica", "pareja", "espanol", "pop", "moderna", "sebastian yatra"], title: "Sebastián Yatra - Tacones Rojos / No Hay Nadie Más", desc: "Pop romántico actual en español, dulce y luminoso.", reason: "Alterna ternura acústica con ritmo alegre para disfrutar en pareja sin solemnidad.", vibeNote: "Romance actual, dulce y cercano.", idealMoment: "Dedicar o escuchar juntos con buena onda.", searchUrl: "https://www.youtube.com/results?search_query=Sebastian+Yatra+No+Hay+Nadie+Mas" },
+
+                // FEAR
+                { mood: "fear", year: 1982, decade: "80s", awards: ["8 Premios Grammy"], sales: "Más de 70 millones de copias", wikiQuery: "Thriller (canción)", tags: ["terror", "suspenso", "ingles", "clasico", "pop", "80s", "michael jackson", "grammy"], title: "Michael Jackson - Thriller / Smooth Criminal", desc: "El clásico absoluto de misterio, ritmo y teatralidad.", reason: "Aúna atmósfera de terror clásico, efectos cinematográficos y un ritmo irresistible.", vibeNote: "Suspenso teatral con ritmo icónico.", idealMoment: "Ambientar una noche misteriosa con estilo.", searchUrl: "https://www.youtube.com/results?search_query=Michael+Jackson+Thriller" },
+                { mood: "fear", year: 2016, decade: "2010s", awards: ["Premio Emmy"], sales: "Banda sonora oficial", wikiQuery: "Stranger Things", tags: ["terror", "suspenso", "instrumental", "electronica", "80s", "stranger things"], title: "Stranger Things - Soundtrack (Synth oscuro)", desc: "Sintetizadores de suspenso estilo años 80.", reason: "Sus arpegios oscuros generan tensión cinematográfica inmediata.", vibeNote: "Synthwave oscuro y misterioso.", idealMoment: "Sentir el clima de un thriller o serie de misterio.", searchUrl: "https://www.youtube.com/results?search_query=Stranger+Things+theme+extended" },
+
+                // LAUGH
+                { mood: "laugh", year: 1978, decade: "70s", awards: ["Salón de la Fama Grammy"], sales: "Más de 8 millones de copias", wikiQuery: "Earth, Wind & Fire", tags: ["alegre", "fiesta", "ingles", "clasico", "funk", "disco", "70s"], title: "Earth, Wind & Fire - September", desc: "Funk y disco súper alegre que levanta cualquier día.", reason: "Su sección de vientos y ritmo festivo disparan endorfinas desde el primer segundo.", vibeNote: "Alegría contagiosa y espíritu disco.", idealMoment: "Ponerte de buen humor al instante.", searchUrl: "https://www.youtube.com/results?search_query=Earth+Wind+and+Fire+September" },
+                { mood: "laugh", year: 1995, decade: "90s", awards: ["Premio Gardel"], sales: "Multi-platino", wikiQuery: "Los Auténticos Decadentes", tags: ["alegre", "espanol", "nacional", "argentina", "rock", "autenticos decadentes", "fiesta", "90s"], title: "Los Auténticos Decadentes - La Guitarra / Loco (Tu Forma de Ser)", desc: "Alegría popular argentina infalible para cantar a los gritos.", reason: "Humor pícaro, ritmo de fiesta y letras que todo el mundo festeja.", vibeNote: "Fiesta argentina y humor descontracturado.", idealMoment: "Reírte y cantar sin tomarte nada en serio.", searchUrl: "https://www.youtube.com/results?search_query=Los+Autenticos+Decadentes+Loco+Tu+Forma+de+Ser" },
+
+                // NOSTALGIC
+                { mood: "nostalgic", year: 1985, decade: "80s", awards: ["6 Premios MTV VMA"], sales: "Más de 9 millones de copias", wikiQuery: "Take On Me", tags: ["nostalgia", "clasico", "80s", "ingles", "pop", "aha"], title: "a-ha - Take On Me", desc: "El himno pop más emblemático de los años 80.", reason: "Ese teclado inicial activa automáticamente la memoria emotiva de toda una época.", vibeNote: "Nostalgia ochentera pura y luminosa.", idealMoment: "Viajar en el tiempo con un clásico eterno.", searchUrl: "https://www.youtube.com/results?search_query=a-ha+Take+On+Me" },
+                { mood: "nostalgic", year: 1990, decade: "90s", awards: ["Latin Grammy Leyenda"], sales: "Más de 17 millones de discos", wikiQuery: "Soda Stereo", tags: ["nostalgia", "clasico", "espanol", "nacional", "argentina", "rock", "soda stereo", "90s"], title: "Soda Stereo - De Música Ligera / Persiana Americana", desc: "Los clásicos eternos del rock en español.", reason: "Parte fundamental de nuestra cultura musical; cada acorde trae recuerdos compartidos.", vibeNote: "Himnos generacionales del rock en español.", idealMoment: "Revivir los mejores clásicos nacionales.", searchUrl: "https://www.youtube.com/results?search_query=Soda+Stereo+De+Musica+Ligera" },
+                { mood: "nostalgic", year: 2000, decade: "2000s", awards: ["Premio Grammy"], sales: "Más de 12 millones de copias", wikiQuery: "Oops!... I Did It Again (canción)", tags: ["nostalgia", "clasico", "2000", "2000s", "ingles", "pop", "britney spears"], title: "Britney Spears - Oops!... I Did It Again (2000)", desc: "El ícono pop por excelencia del año 2000.", reason: "Pura nostalgia dosmilera con uno de los estribillos más reconocibles del cambio de milenio.", vibeNote: "Nostalgia pop del año 2000.", idealMoment: "Viajar directo al año 2000.", searchUrl: "https://www.youtube.com/results?search_query=Britney+Spears+Oops+I+Did+It+Again+2000" },
+
+                // EPIC
+                { mood: "epic", year: 2010, decade: "2010s", awards: ["Nominada al Oscar"], sales: "Banda sonora top mundial", wikiQuery: "Hans Zimmer", tags: ["epica", "instrumental", "pelicula", "orquestal", "hans zimmer"], title: "Hans Zimmer - Time / Piratas del Caribe", desc: "Música orquestal cinematográfica épica.", reason: "Construye una tensión creciente hasta explotar con toda la fuerza de una orquesta sinfónica.", vibeNote: "Escala cinematográfica monumental.", idealMoment: "Sentir que estás viviendo una escena épica.", searchUrl: "https://www.youtube.com/results?search_query=Hans+Zimmer+Time+Inception" },
+                { mood: "epic", year: 2008, decade: "2000s", awards: ["Canción del Año Grammy"], sales: "Más de 10 millones de copias", wikiQuery: "Viva la Vida", tags: ["epica", "ingles", "pop", "rock", "coldplay", "grammy", "2000s"], title: "Coldplay - Viva La Vida / Paradise", desc: "Cuerdas épicas y coro monumental.", reason: "Sus arreglos de cuerdas y campanas transmiten grandeza y triunfo.", vibeNote: "Himno de estadio con cuerdas épicas.", idealMoment: "Inspirarte con un sonido grandioso.", searchUrl: "https://www.youtube.com/results?search_query=Coldplay+Viva+La+Vida" },
+
+                // PARTY
+                { mood: "party", year: 2022, decade: "2020s", awards: ["Récord Mundial Spotify"], sales: "Multi-platino", wikiQuery: "Bizarrap", tags: ["fiesta", "previa", "espanol", "reggaeton", "urbano", "moderna", "bzrp", "quevedo"], title: "Bizarrap & Quevedo - BZRP Music Sessions #52", desc: "El hit mundial que prende cualquier previa.", reason: "Tiene esa subida electrónica que hace saltar a todo el grupo apenas arranca.", vibeNote: "Himno de previa y fiesta moderna.", idealMoment: "Prender el ambiente antes de salir.", searchUrl: "https://www.youtube.com/results?search_query=Quevedo+BZRP+Music+Sessions+52" },
+                { mood: "party", year: 2000, decade: "2000s", awards: ["Premio Grammy"], sales: "Más de 10 millones de copias", wikiQuery: "One More Time (canción de Daft Punk)", tags: ["fiesta", "previa", "ingles", "electronica", "pop", "daft punk", "2000"], title: "Daft Punk - One More Time (2000)", desc: "El clásico electrónico de fiesta lanzado en el año 2000.", reason: "Estrenada en el año 2000, celebra la música y el baile con una energía positiva inagotable.", vibeNote: "Clásico house festivo del año 2000.", idealMoment: "Subir la energía con amigos.", searchUrl: "https://www.youtube.com/results?search_query=Daft+Punk+One+More+Time+2000" },
+                { mood: "party", year: 2023, decade: "2020s", awards: ["Premio Gardel"], sales: "Hit #1 Argentina", wikiQuery: "Luck Ra", tags: ["fiesta", "previa", "espanol", "nacional", "argentina", "cumbia", "luck ra"], title: "Luck Ra - La Morocha / Hola Perdida", desc: "Cuarteto moderno argentino que suena en todos lados.", reason: "Combina el ritmo popular del cuarteto con sonido actual para bailar sin parar.", vibeNote: "Cuarteto argentino súper festivo.", idealMoment: "Fiesta bien nuestra para cantar y bailar.", searchUrl: "https://www.youtube.com/results?search_query=Luck+Ra+La+Morocha" },
+
+                // LONELY NIGHT
+                { mood: "lonely_night", year: 2013, decade: "2010s", awards: ["Multi-Platino"], sales: "Más de 10 millones de copias", wikiQuery: "The Neighbourhood", tags: ["noche", "madrugada", "ingles", "pop", "indie", "the neighbourhood"], title: "The Neighbourhood - Sweater Weather / Daddy Issues", desc: "Indie pop nocturno con atmósfera envolvente.", reason: "Guitarras con reverb y ritmo pausado que encajan perfecto con el silencio de la noche.", vibeNote: "Atmósfera nocturna e introspectiva.", idealMoment: "Escuchar de madrugada mirando por la ventana.", searchUrl: "https://www.youtube.com/results?search_query=The+Neighbourhood+Sweater+Weather" },
+                { mood: "lonely_night", year: 2018, decade: "2010s", awards: ["Premio Gardel"], sales: "Multi-platino", wikiQuery: "Duki", tags: ["noche", "madrugada", "espanol", "nacional", "argentina", "urbano", "duki"], title: "Duki - She Don't Give a FO / Givenchy", desc: "Trap melódico nocturno referente de la escena argentina.", reason: "Bases envolventes y flow nocturno que acompañan sin saturar.", vibeNote: "Trap melódico argentino de madrugada.", idealMoment: "Escuchar solo/a de noche en español.", searchUrl: "https://www.youtube.com/results?search_query=Duki+She+Dont+Give+a+FO" },
+
+                // ANGRY
+                { mood: "angry", year: 2000, decade: "2000s", awards: ["Disco Diamante"], sales: "Más de 32 millones de copias (Hybrid Theory)", wikiQuery: "In the End", tags: ["bronca", "energia", "ingles", "rock", "metal", "linkin park", "2000"], title: "Linkin Park - In The End (2000)", desc: "El himno del nu-metal del año 2000 del álbum Hybrid Theory.", reason: "Lanzada en el año 2000, canaliza la frustración combinando melodía con guitarras pesadas y fuerza vocal.", vibeNote: "Catarsis rockera potente del año 2000.", idealMoment: "Descargar tensión y bronca acumulada.", searchUrl: "https://www.youtube.com/results?search_query=Linkin+Park+In+The+End+2000" },
+                { mood: "angry", year: 1996, decade: "90s", awards: ["Clásico Rock Nacional"], sales: "Multi-platino", wikiQuery: "La Renga", tags: ["bronca", "energia", "espanol", "nacional", "argentina", "rock", "la renga", "90s"], title: "La Renga - El Final Es en Donde Partí", desc: "Rock pesado argentino crudo y visceral.", reason: "Riffs contundentes y fuerza bruta para sacar todo afuera en español.", vibeNote: "Rock duro argentino visceral.", idealMoment: "Descargar energía con guitarras pesadas.", searchUrl: "https://www.youtube.com/results?search_query=La+Renga+El+Final+Es+en+Donde+Parti" },
+
+                // SUNDAY LAZY
+                { mood: "sunday_lazy", year: 2018, decade: "2010s", awards: ["Disco Diamante"], sales: "Más de 17 millones de copias", wikiQuery: "Post Malone", tags: ["domingo", "tranquila", "suave", "ingles", "pop", "post malone"], title: "Post Malone & Swae Lee - Sunflower", desc: "Melodía relajada, moderna y súper agradable.", reason: "Ligera, cálida y sin exigencias: acompaña el descanso con una sonrisa.", vibeNote: "Pop chill ligero y soleado.", idealMoment: "Domingo sin horarios tirado en el sillón.", searchUrl: "https://www.youtube.com/results?search_query=Post+Malone+Sunflower" },
+                { mood: "sunday_lazy", year: 1997, decade: "90s", awards: ["Latin Grammy"], sales: "Multi-platino", wikiQuery: "Andrés Calamaro", tags: ["domingo", "tranquila", "suave", "espanol", "nacional", "argentina", "rock", "andres calamaro", "90s"], title: "Andrés Calamaro - Flaca / Paloma", desc: "Clásicos relajados del rock argentino para tararear.", reason: "Cercanos, relajados y entrañables para acompañar un día lento.", vibeNote: "Clásico argentino relajado y tarareable.", idealMoment: "Mate, sillón y descanso total.", searchUrl: "https://www.youtube.com/results?search_query=Andres+Calamaro+Flaca" },
+
+                // COOKING / CLEANING
+                { mood: "cooking_cleaning", year: 2020, decade: "2020s", awards: ["Premio Grammy"], sales: "Multi-platino", wikiQuery: "Dua Lipa", tags: ["ritmo", "alegre", "ingles", "pop", "moderna", "dua lipa", "grammy"], title: "Dua Lipa - Levitating / Don't Start Now", desc: "Pop disco moderno súper rítmico y bailable.", reason: "Su línea de bajo disco hace que cualquier tarea doméstica se sienta mucho más rápida y divertida.", vibeNote: "Pop disco moderno con mucho ritmo.", idealMoment: "Ordenar, limpiar o cocinar bailando.", searchUrl: "https://www.youtube.com/results?search_query=Dua+Lipa+Levitating" },
+                { mood: "cooking_cleaning", year: 2004, decade: "2000s", awards: ["Premio Gardel"], sales: "Multi-platino", wikiQuery: "Miranda!", tags: ["ritmo", "alegre", "espanol", "pop", "latino", "miranda", "argentina", "2000s"], title: "Miranda! - Don / Perfecta", desc: "Pop argentino pegadizo y súper divertido.", reason: "Estribillos teatrales y ritmo alegre ideales para cantar mientras hacés cosas en casa.", vibeNote: "Electro-pop argentino súper divertido.", idealMoment: "Ponerle onda a las tareas de la casa.", searchUrl: "https://www.youtube.com/results?search_query=Miranda+Perfecta" },
+
+                // CURIOUS
+                { mood: "curious", year: 2005, decade: "2000s", awards: ["Premio Grammy"], sales: "Más de 8 millones de copias", wikiQuery: "Gorillaz", tags: ["original", "ingles", "rock", "alternativa", "gorillaz", "grammy", "2000s"], title: "Gorillaz - Feel Good Inc. / Clint Eastwood", desc: "Fusión creativa de rock, hip hop y electrónica.", reason: "Mezcla géneros que normalmente no van juntos logrando un sonido único.", vibeNote: "Cruce original de estilos y texturas.", idealMoment: "Salir de lo convencional con algo fresco.", searchUrl: "https://www.youtube.com/results?search_query=Gorillaz+Feel+Good+Inc" },
+
+                // BADASS
+                { mood: "badass", year: 2002, decade: "2000s", awards: ["Premio Oscar", "Premio Grammy"], sales: "Más de 13 millones de copias", wikiQuery: "Lose Yourself", tags: ["actitud", "ingles", "rap", "hip hop", "eminem", "oscar", "grammy", "2000s"], title: "Eminem - Lose Yourself (Ganadora del Oscar)", desc: "El tema de determinación y actitud más famoso del hip hop.", reason: "Primera canción de rap en ganar el Premio Oscar; su cadencia implacable te pone en mentalidad ganadora.", vibeNote: "Determinación pura premiada con el Oscar.", idealMoment: "Sentirte imparable antes de hacer algo importante.", searchUrl: "https://www.youtube.com/results?search_query=Eminem+Lose+Yourself" },
+                { mood: "badass", year: 2021, decade: "2020s", awards: ["Premio Gardel de Oro"], sales: "Multi-platino", wikiQuery: "Trueno (rapero)", tags: ["actitud", "espanol", "nacional", "argentina", "rap", "trueno"], title: "Trueno - Dance Crip / Mamichula", desc: "Hip hop argentino con muchísima actitud y presencia.", reason: "Beats contundentes con esencia boom-bap y presencia escénica arrolladora.", vibeNote: "Flow argentino con mucha presencia.", idealMoment: "Caminar por la calle sintiéndote protagonista.", searchUrl: "https://www.youtube.com/results?search_query=Trueno+Dance+Crip" },
+
+                // COZY RAIN
+                { mood: "cozy_rain", year: 2020, decade: "2020s", awards: ["Álbum del Año Grammy"], sales: "Más de 5 millones de copias", wikiQuery: "Taylor Swift", tags: ["lluvia", "tranquila", "suave", "ingles", "pop", "taylor swift", "grammy"], title: "Taylor Swift - Cardigan / Exile", desc: "Indie folk suave con piano y atmósfera de otoño.", reason: "Piano intimista y narración cálida que combinan perfecto con el sonido de la lluvia.", vibeNote: "Indie folk acogedor e intimista.", idealMoment: "Tarde gris con algo caliente para tomar.", searchUrl: "https://www.youtube.com/results?search_query=Taylor+Swift+cardigan" },
+
+                // ROADTRIP
+                { mood: "roadtrip", year: 2000, decade: "2000s", awards: ["Premio Grammy"], sales: "Más de 15 millones de copias (Californication)", wikiQuery: "Californication (canción)", tags: ["ruta", "viaje", "ingles", "rock", "red hot chili peppers", "2000", "grammy"], title: "Red Hot Chili Peppers - Californication (2000)", desc: "Rock melódico rutero por excelencia lanzado como single en el 2000.", reason: "Guitarras abiertas y ritmo fluido que acompañan el movimiento del paisaje.", vibeNote: "Rock melódico con espíritu de carretera.", idealMoment: "Viajar en ruta mirando por la ventanilla.", searchUrl: "https://www.youtube.com/results?search_query=Red+Hot+Chili+Peppers+Californication+2000" },
+                { mood: "roadtrip", year: 1994, decade: "90s", awards: ["Clásico Rock Nacional"], sales: "Multi-platino", wikiQuery: "Los Piojos", tags: ["ruta", "viaje", "espanol", "nacional", "argentina", "rock", "los piojos", "90s"], title: "Los Piojos - Como Alí / Tan Solo", desc: "Rock argentino con espíritu de ruta, viaje y amigos.", reason: "Energía rutera argentina ideal para cantar en el auto durante un viaje largo.", vibeNote: "Rock nacional rutero y viajero.", idealMoment: "Salir a la ruta con amigos o familia.", searchUrl: "https://www.youtube.com/results?search_query=Los+Piojos+Tan+Solo" },
+
+                // EXISTENTIAL
+                { mood: "existential", year: 1975, decade: "70s", awards: ["Salón de la Fama Grammy"], sales: "Más de 20 millones de copias", wikiQuery: "Bohemian Rhapsody", tags: ["profunda", "ingles", "rock", "clasico", "queen", "70s"], title: "Queen - Bohemian Rhapsody", desc: "La obra maestra que recorre todas las emociones humanas.", reason: "Una travesía operística por la duda, el drama, la rebeldía y la aceptación.", vibeNote: "Viaje emocional completo e inolvidable.", idealMoment: "Sumergirte en una obra profunda y trascendente.", searchUrl: "https://www.youtube.com/results?search_query=Queen+Bohemian+Rhapsody" }
+            ],
+
+            movie: [
+                // RELAX
+                { mood: "relax", year: 1994, decade: "90s", awards: ["6 Premios Oscar (Mejor Película)"], sales: "678 millones USD taquilla", wikiQuery: "Forrest Gump", tags: ["tranquila", "clasico", "drama", "comedia", "forrest gump", "oscar", "ganadora del oscar", "90s"], title: "Forrest Gump", desc: "Ganadora de 6 Premios Oscar, incluyendo Mejor Película y Mejor Actor.", reason: "Su narración pausada, humor noble y banda sonora icónica te envuelven en una historia luminosa sin tensión ni estrés.", vibeNote: "Ganadora de 6 Premios Oscar; narrativa cálida y emotiva.", idealMoment: "Desconectar mirando una historia reconfortante.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Forrest+Gump" },
+                { mood: "relax", year: 1988, decade: "80s", awards: ["Premio Blue Ribbon"], sales: "Clásico Studio Ghibli", wikiQuery: "Mi vecino Totoro", tags: ["tranquila", "animada", "japonesa", "fantasia", "totoro", "80s"], title: "Mi Vecino Totoro", desc: "Animación mágica y pacífica de Studio Ghibli.", reason: "No tiene villanos ni conflictos violentos; celebra la naturaleza, la infancia y la calma con paisajes preciosos.", vibeNote: "Paz visual absoluta y ternura artesanal.", idealMoment: "Bajar revoluciones con cine animado sereno.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Mi+Vecino+Totoro" },
+                { mood: "relax", year: 2018, decade: "2010s", awards: ["3 Premios Oscar (Mejor Película)"], sales: "321 millones USD taquilla", wikiQuery: "Green Book", tags: ["tranquila", "comedia", "drama", "viaje", "oscar", "ganadora del oscar"], title: "Green Book: Una Amistad sin Fronteras", desc: "Ganadora del Oscar a Mejor Película sobre un viaje lleno de humor y humanidad.", reason: "Cálida, amena y con una química extraordinaria entre sus protagonistas que te deja con el corazón contento.", vibeNote: "Ganadora del Oscar a Mejor Película; cálida y optimista.", idealMoment: "Relajarte con una gran historia humana.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Green+Book" },
+
+                // ENERGY
+                { mood: "energy", year: 2018, decade: "2010s", awards: ["Premio Oscar (Mejor Película Animada)"], sales: "384 millones USD taquilla", wikiQuery: "Spider-Man: Un nuevo universo", tags: ["energia", "animada", "accion", "superheroes", "spiderman", "moderna", "oscar", "ganadora del oscar"], title: "Spider-Man: Un nuevo universo", desc: "Ganadora del Oscar a Mejor Película Animada con estilo visual revolucionario.", reason: "Cada fotograma parece un cómic en movimiento con un montaje vertiginoso y banda sonora urbana que dispara la motivación.", vibeNote: "Ganadora del Oscar; ritmo visual explosivo.", idealMoment: "Llenarte de energía y creatividad.", searchUrl: "https://www.google.com/search?q=ver+Spider-Man+Un+nuevo+universo" },
+                { mood: "energy", year: 2022, decade: "2020s", awards: ["Premio Oscar (Mejor Sonido)"], sales: "1.495 millones USD taquilla", wikiQuery: "Top Gun: Maverick", tags: ["energia", "accion", "aviones", "tom cruise", "moderna", "oscar"], title: "Top Gun: Maverick", desc: "Adrenalina pura en el aire y emoción constante ganadora del Oscar.", reason: "Secuencias aéreas filmadas realmente en cabina que te mantienen pegado al asiento con adrenalina positiva.", vibeNote: "Adrenalina de alto vuelo premiada con el Oscar.", idealMoment: "Activar los sentidos con acción de primer nivel.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Top+Gun+Maverick" },
+                { mood: "energy", year: 2015, decade: "2010s", awards: ["6 Premios Oscar"], sales: "380 millones USD taquilla", wikiQuery: "Mad Max: Fury Road", tags: ["energia", "accion", "intensa", "moderna", "oscar", "ganadora del oscar"], title: "Mad Max: Furia en el Camino", desc: "Ganadora de 6 Premios Oscar; dos horas de acción imparable.", reason: "Ritmo frenético, efectos prácticos reales y una energía visual que no da respiro.", vibeNote: "Ganadora de 6 Oscar; intensidad máxima.", idealMoment: "Adrenalina pura de principio a fin.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Mad+Max+Fury+Road" },
+
+                // MINDFUCK
+                { mood: "mindfuck", year: 2010, decade: "2010s", awards: ["4 Premios Oscar"], sales: "836 millones USD taquilla", wikiQuery: "Inception", tags: ["compleja", "ciencia ficcion", "accion", "suspenso", "inception", "oscar", "ganadora del oscar"], title: "El Origen (Inception)", desc: "Ganadora de 4 Premios Oscar; thriller dentro del mundo de los sueños.", reason: "Construye una arquitectura narrativa de sueños dentro de sueños con reglas claras y un final abierto inolvidable.", vibeNote: "Ganadora de 4 Oscar; rompecabezas de ciencia ficción.", idealMoment: "Pensar y analizar cada pista de la trama.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Inception+El+Origen" },
+                { mood: "mindfuck", year: 2019, decade: "2010s", awards: ["4 Premios Oscar (Mejor Película)"], sales: "262 millones USD taquilla", wikiQuery: "Parásitos (película)", tags: ["compleja", "suspenso", "misterio", "drama", "oscar", "ganadora del oscar"], title: "Parásitos (Parasite)", desc: "Histórica ganadora de 4 Premios Oscar incluyendo Mejor Película.", reason: "Comienza como comedia inteligente y gira hacia un thriller impredecible que te deja pensando días.", vibeNote: "Ganadora del Oscar a Mejor Película; giros magistrales.", idealMoment: "Atrapar tu mente con cine brillante.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Parasitos" },
+                { mood: "mindfuck", year: 2022, decade: "2020s", awards: ["7 Premios Oscar (Mejor Película)"], sales: "143 millones USD taquilla", wikiQuery: "Everything Everywhere All at Once", tags: ["compleja", "ciencia ficcion", "comedia", "accion", "oscar", "ganadora del oscar"], title: "Todo en Todas Partes al Mismo Tiempo", desc: "Ganadora de 7 Premios Oscar incluyendo Mejor Película.", reason: "Explora el multiverso con humor absurdo, artes marciales y una emoción familiar profunda.", vibeNote: "Ganadora de 7 Oscar; multiverso creativo y emotivo.", idealMoment: "Flashear con una película fuera de todo molde.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Todo+en+todas+partes+al+mismo+tiempo" },
+                { mood: "mindfuck", year: 2000, decade: "2000s", awards: ["7 Premios Cóndor de Plata"], sales: "Clásico del Cine Argentino", wikiQuery: "Nueve reinas", tags: ["compleja", "espanol", "argentina", "nacional", "suspenso", "clasico", "2000"], title: "Nueve Reinas (2000)", desc: "El clásico argentino del año 2000 de estafas, engaños y giros brillantes.", reason: "Guion milimétrico en español donde nadie es quien parece ser hasta el último segundo.", vibeNote: "Obra maestra argentina del año 2000.", idealMoment: "Disfrutar cine nacional inteligente y atrapante.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Nueve+Reinas" },
+
+                // SAD
+                { mood: "sad", year: 2006, decade: "2000s", awards: ["Nominada al Oscar"], sales: "307 millones USD taquilla", wikiQuery: "En busca de la felicidad", tags: ["triste", "drama", "emotiva", "will smith", "2000s"], title: "En busca de la felicidad", desc: "Drama conmovedor protagonizado por Will Smith.", reason: "Retrata con crudeza y ternura la lucha de un padre por salir adelante, logrando una catarsis emocional genuina.", vibeNote: "Drama humano profundo y conmovedor.", idealMoment: "Conectar con emociones reales y resiliencia.", searchUrl: "https://www.google.com/search?q=ver+pelicula+En+busca+de+la+felicidad" },
+                { mood: "sad", year: 2009, decade: "2000s", awards: ["2 Premios Oscar (Mejor Película Extranjera)"], sales: "Éxito internacional", wikiQuery: "El secreto de sus ojos", tags: ["triste", "drama", "espanol", "argentina", "nacional", "misterio", "oscar", "ganadora del oscar", "2000s"], title: "El Secreto de Sus Ojos", desc: "Película argentina ganadora del Premio Oscar a Mejor Película Internacional.", reason: "Combina suspenso policial, nostalgia, amor postergado y actuaciones inolvidables en español.", vibeNote: "Ganadora del Oscar; orgullo del cine argentino.", idealMoment: "Ver una obra maestra emotiva en español.", searchUrl: "https://www.google.com/search?q=ver+pelicula+El+secreto+de+sus+ojos" },
+                { mood: "sad", year: 2009, decade: "2000s", awards: ["Clásico emotivo"], sales: "46 millones USD taquilla", wikiQuery: "Siempre a tu lado, Hachiko", tags: ["triste", "drama", "perros", "emotiva", "hachiko", "2000s"], title: "Siempre a tu lado, Hachiko", desc: "La historia más tierna y emotiva sobre la lealtad.", reason: "Basada en hechos reales, toca la fibra más sensible sobre el amor incondicional.", vibeNote: "Ternura y desahogo emocional garantizado.", idealMoment: "Soltar lágrimas y conectar con el corazón.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Siempre+a+tu+lado+Hachiko" },
+
+                // FOCUS
+                { mood: "focus", year: 2010, decade: "2010s", awards: ["3 Premios Oscar"], sales: "224 millones USD taquilla", wikiQuery: "The Social Network", tags: ["inteligente", "biografia", "tecnologia", "ritmo", "oscar"], title: "Red Social (The Social Network)", desc: "Ganadora de 3 Premios Oscar sobre la creación de Facebook.", reason: "Diálogos afilados de Aaron Sorkin y música electrónica ambiental que estimulan la agilidad mental.", vibeNote: "Ganadora de 3 Oscar; diálogos rápidos e inteligencia.", idealMoment: "Mantener la mente despierta y enfocada.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Red+Social" },
+                { mood: "focus", year: 2023, decade: "2020s", awards: ["7 Premios Oscar (Mejor Película)"], sales: "975 millones USD taquilla", wikiQuery: "Oppenheimer (película)", tags: ["inteligente", "biografia", "historia", "ciencia", "oscar", "ganadora del oscar"], title: "Oppenheimer", desc: "Ganadora de 7 Premios Oscar incluyendo Mejor Película y Dirección.", reason: "Ritmo narrativo vertiginoso sobre física cuántica, decisiones históricas y genio científico.", vibeNote: "Ganadora de 7 Oscar; intensidad intelectual.", idealMoment: "Sumergirte en un drama histórico brillante.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Oppenheimer" },
+
+                // ROMANTIC
+                { mood: "romantic", year: 1997, decade: "90s", awards: ["11 Premios Oscar (Mejor Película)"], sales: "2.264 millones USD taquilla", wikiQuery: "Titanic (película de 1997)", tags: ["romantica", "pareja", "drama", "clasico", "oscar", "ganadora del oscar", "90s"], title: "Titanic", desc: "Ganadora de 11 Premios Oscar; el romance épico más famoso del cine.", reason: "Combina una historia de amor inolvidable con una reconstrucción histórica monumental.", vibeNote: "Ganadora de 11 Oscar; romance épico eterno.", idealMoment: "Noche de cine clásico en pareja.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Titanic" },
+                { mood: "romantic", year: 2016, decade: "2010s", awards: ["6 Premios Oscar"], sales: "471 millones USD taquilla", wikiQuery: "La La Land", tags: ["romantica", "pareja", "musica", "drama", "moderna", "oscar", "ganadora del oscar"], title: "La La Land: Ciudad de Sueños", desc: "Ganadora de 6 Premios Oscar; romance, jazz y sueños en Los Ángeles.", reason: "Visualmente mágica, musical y llena de química entre sus protagonistas.", vibeNote: "Ganadora de 6 Oscar; estética soñadora.", idealMoment: "Una cita especial de cine en casa.", searchUrl: "https://www.google.com/search?q=ver+pelicula+La+La+Land" },
+                { mood: "romantic", year: 2013, decade: "2010s", awards: ["Clásico moderno"], sales: "87 millones USD taquilla", wikiQuery: "About Time", tags: ["romantica", "pareja", "comedia", "fantasia"], title: "Cuestión de Tiempo (About Time)", desc: "Amor, familia y viajes en el tiempo con mucha sensibilidad.", reason: "Combina humor británico, romance genuino y una reflexión preciosa sobre disfrutar cada día.", vibeNote: "Romance cálido, divertido y entrañable.", idealMoment: "Compartir una película hermosa en pareja.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Cuestion+de+Tiempo" },
+
+                // FEAR
+                { mood: "fear", year: 2017, decade: "2010s", awards: ["Premio Oscar (Mejor Guion Original)"], sales: "255 millones USD taquilla", wikiQuery: "Get Out", tags: ["terror", "suspenso", "misterio", "oscar", "ganadora del oscar"], title: "¡Huye! (Get Out)", desc: "Thriller de terror psicológico ganador del Premio Oscar a Mejor Guion.", reason: "Tensión creciente, giros brillantes y una atmósfera inquietante de principio a fin.", vibeNote: "Ganadora del Oscar; suspenso psicológico maestro.", idealMoment: "Ver un thriller inteligente y tenso.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Get+Out+Huye" },
+                { mood: "fear", year: 2013, decade: "2010s", awards: ["Clásico Terror Moderno"], sales: "319 millones USD taquilla", wikiQuery: "The Conjuring", tags: ["terror", "suspenso", "miedo", "fantasmas"], title: "El Conjuro", desc: "Terror sobrenatural clásico con sustos de primer nivel.", reason: "Construye la tensión con maestría cinematográfica antes de cada susto.", vibeNote: "Terror clásico de atmósfera opresiva.", idealMoment: "Apagar las luces y sentir verdadera adrenalina.", searchUrl: "https://www.google.com/search?q=ver+pelicula+El+Conjuro" },
+                { mood: "fear", year: 2023, decade: "2020s", awards: ["Premio Festival de Sitges"], sales: "Éxito Terror Argentino", wikiQuery: "Cuando acecha la maldad", tags: ["terror", "suspenso", "espanol", "argentina", "nacional"], title: "Cuando Acecha la Maldad", desc: "El fenómeno del terror argentino aclamado internacionalmente.", reason: "Cruda, original e inquietante: demuestra el altísimo nivel del terror nacional.", vibeNote: "Terror argentino visceral e impredecible.", idealMoment: "Ver una película de terror potente en español.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Cuando+acecha+la+maldad" },
+
+                // LAUGH
+                { mood: "laugh", year: 2009, decade: "2000s", awards: ["Globo de Oro Mejor Comedia"], sales: "469 millones USD taquilla", wikiQuery: "The Hangover", tags: ["comedia", "risa", "amigos", "fiesta", "2000s"], title: "¿Qué pasó ayer?", desc: "La comedia de amigos más descontrolada y famosa.", reason: "Encadena situaciones cada vez más absurdas con un ritmo cómico imparable.", vibeNote: "Humor descontrolado y situaciones absurdas.", idealMoment: "Reírte a carcajadas sin pensar en nada.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Que+paso+ayer" },
+                { mood: "laugh", year: 2014, decade: "2010s", awards: ["Nominada al Oscar", "Premio BAFTA"], sales: "Película argentina más vista", wikiQuery: "Relatos salvajes", tags: ["comedia", "risa", "espanol", "argentina", "nacional", "clasico", "oscar"], title: "Relatos Salvajes", desc: "Comedia negra argentina nominada al Oscar y fenómeno absoluto.", reason: "Retrata situaciones cotidianas llevadas al extremo con diálogos geniales en español.", vibeNote: "Comedia negra e ingenio bien argentino.", idealMoment: "Reírte con una joya indiscutida del cine nacional.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Relatos+Salvajes" },
+
+                // NOSTALGIC
+                { mood: "nostalgic", year: 1985, decade: "80s", awards: ["Premio Oscar"], sales: "388 millones USD taquilla", wikiQuery: "Back to the Future", tags: ["nostalgia", "clasico", "80s", "aventura", "ciencia ficcion", "oscar"], title: "Volver al Futuro", desc: "La aventura ochentera más querida de la historia, ganadora del Oscar.", reason: "Guion perfecto, carisma insuperable y toda la magia del cine de aventuras de los 80.", vibeNote: "Magia ochentera y aventura atemporal.", idealMoment: "Sentir nostalgia pura con una sonrisa.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Volver+al+Futuro" },
+                { mood: "nostalgic", year: 1995, decade: "90s", awards: ["Premio Oscar Especial"], sales: "394 millones USD taquilla", wikiQuery: "Toy Story", tags: ["nostalgia", "animada", "clasico", "infancia", "pixar", "oscar", "90s"], title: "Toy Story", desc: "El primer largometraje animado por computadora, premiado con el Oscar.", reason: "Vuelve a despertar la imaginación de la niñez con personajes entrañables.", vibeNote: "Nostalgia de infancia y amistad.", idealMoment: "Volver a sentirte chico por un rato.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Toy+Story" },
+
+                // EPIC
+                { mood: "epic", year: 2003, decade: "2000s", awards: ["11 Premios Oscar (Mejor Película)"], sales: "1.147 millones USD taquilla", wikiQuery: "El Señor de los Anillos: el retorno del Rey", tags: ["epica", "fantasia", "aventura", "clasico", "oscar", "ganadora del oscar", "2000s"], title: "El Señor de los Anillos: El Retorno del Rey", desc: "Ganadora de 11 Premios Oscar incluyendo Mejor Película.", reason: "Construcción de mundo inigualable, batallas colosales y compañerismo heroico.", vibeNote: "Ganadora de 11 Oscar; fantasía épica monumental.", idealMoment: "Sumergirte en una gran travesía heroica.", searchUrl: "https://www.google.com/search?q=ver+El+Senor+de+los+Anillos+Retorno+del+Rey" },
+                { mood: "epic", year: 2000, decade: "2000s", awards: ["5 Premios Oscar (Mejor Película)"], sales: "465 millones USD taquilla", wikiQuery: "Gladiator (película de 2000)", tags: ["epica", "accion", "historia", "clasico", "2000", "oscar", "ganadora del oscar"], title: "Gladiador (2000)", desc: "Estrenada en el año 2000 y ganadora de 5 Premios Oscar incluyendo Mejor Película.", reason: "Discursos memorables, emoción épica y actuaciones inolvidables del año 2000.", vibeNote: "Ganadora del Oscar a Mejor Película en el 2000.", idealMoment: "Ver una historia de honor y valentía.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Gladiador+2000" },
+
+                // PARTY
+                { mood: "party", year: 2012, decade: "2010s", awards: ["Culto juvenil"], sales: "102 millones USD taquilla", wikiQuery: "Proyecto X (película de 2012)", tags: ["fiesta", "comedia", "amigos", "joven"], title: "Proyecto X", desc: "La fiesta adolescente más descontrolada del cine.", reason: "Banda sonora de fiesta constante y escalada de locura ideal para ver en grupo.", vibeNote: "Descontrol festivo y música arriba.", idealMoment: "Previa o juntada con amigos.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Proyecto+X" },
+
+                // LONELY NIGHT
+                { mood: "lonely_night", year: 2013, decade: "2010s", awards: ["Premio Oscar (Mejor Guion Original)"], sales: "48 millones USD taquilla", wikiQuery: "Her (película)", tags: ["noche", "tranquila", "romance", "ciencia ficcion", "moderna", "oscar", "ganadora del oscar"], title: "Her", desc: "Ganadora del Oscar a Mejor Guion; una historia íntima y nocturna.", reason: "Su fotografía cálida y ritmo contemplativo acompañan la quietud de la noche.", vibeNote: "Ganadora del Oscar; intimidad nocturna.", idealMoment: "Noche tranquila de reflexión personal.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Her" },
+
+                // ANGRY
+                { mood: "angry", year: 2014, decade: "2010s", awards: ["Saga de culto acción"], sales: "86 millones USD taquilla", wikiQuery: "John Wick", tags: ["accion", "venganza", "pelea", "intensa"], title: "John Wick", desc: "Acción directa, coreografías impecables y ritmo imparable.", reason: "Sin rodeos ni rellenos: acción precisa y contundente para descargar adrenalina.", vibeNote: "Acción estilizada y contundente.", idealMoment: "Liberar tensión con escenas de acción.", searchUrl: "https://www.google.com/search?q=ver+pelicula+John+Wick" },
+
+                // SUNDAY LAZY
+                { mood: "sunday_lazy", year: 2001, decade: "2000s", awards: ["Premio Oscar (Mejor Película Animada)"], sales: "488 millones USD taquilla", wikiQuery: "Shrek", tags: ["domingo", "animada", "comedia", "clasico", "oscar", "ganadora del oscar", "2000s"], title: "Shrek", desc: "Primera ganadora del Premio Oscar a Mejor Película Animada.", reason: "Divertida, ligera y llena de referencias que se disfrutan sin hacer ningún esfuerzo.", vibeNote: "Ganadora del Oscar; humor infalible.", idealMoment: "Domingo de sillón y cero obligaciones.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Shrek" },
+
+                // COOKING / CLEANING
+                { mood: "cooking_cleaning", year: 2007, decade: "2000s", awards: ["Premio Oscar (Mejor Película Animada)"], sales: "623 millones USD taquilla", wikiQuery: "Ratatouille", tags: ["cocina", "animada", "alegre", "pixar", "oscar", "ganadora del oscar", "2000s"], title: "Ratatouille", desc: "Ganadora del Premio Oscar; la película más inspiradora sobre cocinar con pasión.", reason: "Llena de color, música francesa encantadora y amor por los detalles.", vibeNote: "Ganadora del Oscar; alegre y culinaria.", idealMoment: "Tener de fondo mientras cocinás o ordenás.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Ratatouille" },
+
+                // CURIOUS
+                { mood: "curious", year: 2014, decade: "2010s", awards: ["Premio Oscar (Mejores Efectos Visuales)"], sales: "731 millones USD taquilla", wikiQuery: "Interstellar", tags: ["ciencia ficcion", "espacio", "inteligente", "epica", "oscar"], title: "Interestelar (Interstellar)", desc: "Ganadora del Oscar; viajes espaciales, agujeros negros y relatividad.", reason: "Basada en física real, combina asombro científico con una historia profundamente humana.", vibeNote: "Ganadora del Oscar; ciencia cósmica.", idealMoment: "Flashear con el universo y el tiempo.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Interstellar" },
+
+                // BADASS
+                { mood: "badass", year: 2008, decade: "2000s", awards: ["2 Premios Oscar"], sales: "1.006 millones USD taquilla", wikiQuery: "The Dark Knight", tags: ["accion", "superheroes", "batman", "intensa", "oscar", "ganadora del oscar", "2000s"], title: "El Caballero de la Noche (The Dark Knight)", desc: "Ganadora de 2 Premios Oscar; la película de superhéroes más icónica.", reason: "Tono serio, antagonista legendario y una presencia cinematográfica imponente.", vibeNote: "Ganadora de 2 Oscar; epicidad urbana.", idealMoment: "Ver una obra maestra de acción y carácter.", searchUrl: "https://www.google.com/search?q=ver+pelicula+El+Caballero+de+la+Noche" },
+
+                // COZY RAIN
+                { mood: "cozy_rain", year: 2019, decade: "2010s", awards: ["Nominada al Oscar"], sales: "312 millones USD taquilla", wikiQuery: "Knives Out", tags: ["lluvia", "misterio", "comedia", "inteligente", "oscar"], title: "Entre Navajas y Secretos (Knives Out)", desc: "Misterio detectivesco en una mansión acogedora.", reason: "Suéteres de lana, lluvia otoñal, humor ingenioso y un caso policial muy entretenido.", vibeNote: "Misterio acogedor y súper entretenido.", idealMoment: "Tarde de lluvia con frazada y algo caliente.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Knives+Out" },
+
+                // ROADTRIP
+                { mood: "roadtrip", year: 2006, decade: "2000s", awards: ["Globo de Oro Mejor Animada"], sales: "462 millones USD taquilla", wikiQuery: "Cars (película)", tags: ["ruta", "viaje", "animada", "autos", "pixar", "2000s"], title: "Cars", desc: "La Ruta 66, amistad y velocidad.", reason: "Celebra el espíritu de viajar sin apuro disfrutando el camino.", vibeNote: "Espíritu rutero y amistad.", idealMoment: "Modo viaje y carretera.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Cars" },
+
+                // EXISTENTIAL
+                { mood: "existential", year: 2020, decade: "2020s", awards: ["2 Premios Oscar (Mejor Película Animada)"], sales: "121 millones USD taquilla", wikiQuery: "Soul (película)", tags: ["profunda", "animada", "musica", "pixar", "oscar", "ganadora del oscar"], title: "Soul", desc: "Ganadora de 2 Premios Oscar; animación de Pixar sobre el sentido de la vida.", reason: "Explora el propósito, la pasión y la belleza de las pequeñas cosas cotidianas con enorme sensibilidad.", vibeNote: "Ganadora de 2 Oscar; filosofía cotidiana emotiva.", idealMoment: "Responder preguntas profundas con calidez.", searchUrl: "https://www.google.com/search?q=ver+pelicula+Soul" }
+            ],
+
+            game: [
+                // RELAX
+                { mood: "relax", year: 2016, decade: "2010s", awards: ["Golden Joystick Breakthrough"], sales: "Más de 30 millones de copias vendidas", salesCount: 30000000, wikiQuery: "Stardew Valley", tags: ["tranquilo", "indie", "simulacion", "granja", "pc", "consola", "copias", "ventas"], title: "Stardew Valley", desc: "Simulador indie de granja con más de 30 millones de copias vendidas.", reason: "No te apura ni te castiga: podés cultivar, pescar o decorar a tu propio ritmo con una música sumamente apacible.", vibeNote: "Más de 30 millones de copias vendidas; calma total.", idealMoment: "Desconectar la mente jugando tranquilo.", searchUrl: "https://www.google.com/search?q=Stardew+Valley+videojuego" },
+                { mood: "relax", year: 2020, decade: "2020s", awards: ["The Game Awards Best Family"], sales: "Más de 45 millones de copias vendidas", salesCount: 45000000, wikiQuery: "Animal Crossing: New Horizons", tags: ["tranquilo", "nintendo", "simulacion", "construccion", "copias", "ventas"], title: "Animal Crossing: New Horizons", desc: "Fenómeno de Nintendo con más de 45 millones de copias vendidas.", reason: "Funciona en tiempo real y convierte pequeñas tareas cotidianas en un refugio digital lleno de paz.", vibeNote: "Más de 45 millones de copias; refugio de paz.", idealMoment: "Bajar revoluciones en un mundo amable.", searchUrl: "https://www.google.com/search?q=Animal+Crossing+New+Horizons" },
+
+                // ENERGY
+                { mood: "energy", year: 2015, decade: "2010s", awards: ["The Game Awards Best Sports"], sales: "Más de 10 millones de copias (ahora gratis)", salesCount: 10000000, wikiQuery: "Rocket League", tags: ["energia", "multijugador", "deportes", "autos", "competitivo", "gratis", "copias"], title: "Rocket League", desc: "Fútbol frenético con autos propulsados por cohetes.", reason: "Partidas intensas de 5 minutos donde cada segundo exige reflejos, velocidad y adrenalina.", vibeNote: "Velocidad pura y partidos cortos explosivos.", idealMoment: "Activarte rápido con partidas dinámicas.", searchUrl: "https://www.google.com/search?q=Rocket+League+videojuego" },
+                { mood: "energy", year: 2020, decade: "2020s", awards: ["BAFTA Mejor Juego del Año"], sales: "Más de 1 millón de copias vendidas", salesCount: 1000000, wikiQuery: "Hades (videojuego)", tags: ["energia", "accion", "indie", "roguelike", "mitologia", "copias"], title: "Hades", desc: "Ganador del BAFTA a Mejor Juego; acción ultrarrápida en el inframundo.", reason: "Combate fluido, combinaciones de poderes constantes y música rock que mantiene la energía al máximo.", vibeNote: "Combate frenético premiado como Juego del Año.", idealMoment: "Entrar en ritmo rápido de acción.", searchUrl: "https://www.google.com/search?q=Hades+videojuego" },
+
+                // MINDFUCK
+                { mood: "mindfuck", year: 2011, decade: "2010s", awards: ["BAFTA Mejor Juego"], sales: "Más de 4 millones de copias vendidas", salesCount: 4000000, wikiQuery: "Portal 2", tags: ["complejo", "puzzles", "ciencia ficcion", "comedia", "clasico", "copias"], title: "Portal 2", desc: "Acertijos de física con portales espaciales y más de 4 millones de copias vendidas.", reason: "Reconfigura cómo pensás el espacio y la gravedad mientras te atrapa con una historia genial.", vibeNote: "Más de 4 millones de copias; ingeniería de puzzles.", idealMoment: "Exprimir el ingenio resolviendo acertijos.", searchUrl: "https://www.google.com/search?q=Portal+2+videojuego" },
+                { mood: "mindfuck", year: 2019, decade: "2010s", awards: ["BAFTA Mejor Juego"], sales: "Más de 1 millón de copias vendidas", salesCount: 1000000, wikiQuery: "Outer Wilds", tags: ["complejo", "exploracion", "espacio", "misterio", "indie", "copias"], title: "Outer Wilds", desc: "Exploración espacial dentro de un bucle temporal de 22 minutos.", reason: "No subís de nivel ni mejorás armas: tu único progreso es comprender los secretos del sistema solar.", vibeNote: "Misterio cósmico premiado con el BAFTA.", idealMoment: "Sumergirte en un rompecabezas espacial.", searchUrl: "https://www.google.com/search?q=Outer+Wilds+videojuego" },
+
+                // SAD
+                { mood: "sad", year: 2018, decade: "2010s", awards: ["The Game Awards Games for Impact"], sales: "Más de 3 millones de copias vendidas", salesCount: 3000000, wikiQuery: "Gris (videojuego)", tags: ["triste", "emotivo", "indie", "arte", "tranquilo", "copias"], title: "GRIS", desc: "Obra indie en acuarela con más de 3 millones de copias vendidas.", reason: "Sin diálogos, usa el regreso progresivo de los colores y la música para expresar sanación emocional.", vibeNote: "Más de 3 millones de copias; arte y emoción.", idealMoment: "Conectar con tus emociones de forma artística.", searchUrl: "https://www.google.com/search?q=GRIS+videojuego" },
+                { mood: "sad", year: 2013, decade: "2010s", awards: ["Más de 200 premios GOTY"], sales: "Más de 20 millones de copias vendidas", salesCount: 20000000, wikiQuery: "The Last of Us", tags: ["triste", "emotivo", "historia", "aventura", "accion", "copias"], title: "The Last of Us", desc: "Aclamada obra maestra con más de 20 millones de copias vendidas.", reason: "Su guion cinematográfico y actuaciones crean un lazo emocional inolvidable con sus protagonistas.", vibeNote: "Más de 20 millones de copias; narrativa inolvidable.", idealMoment: "Vivir una historia intensa y conmovedora.", searchUrl: "https://www.google.com/search?q=The+Last+of+Us+videojuego" },
+
+                // FOCUS
+                { mood: "focus", year: 2015, decade: "2010s", awards: ["Éxito Estrategia PC"], sales: "Más de 12 millones de copias vendidas", salesCount: 12000000, wikiQuery: "Cities: Skylines", tags: ["estrategia", "construccion", "simulacion", "tranquilo", "copias"], title: "Cities: Skylines", desc: "Simulador urbano con más de 12 millones de copias vendidas.", reason: "Exige planificación urbana, gestión de transporte y atención al detalle en un entorno inmersivo.", vibeNote: "Más de 12 millones de copias; planificación estratégica.", idealMoment: "Enfocarte construyendo paso a paso.", searchUrl: "https://www.google.com/search?q=Cities+Skylines" },
+
+                // ROMANTIC
+                { mood: "romantic", year: 2021, decade: "2020s", awards: ["Juego del Año (The Game Awards)"], sales: "Más de 20 millones de copias vendidas", salesCount: 20000000, wikiQuery: "It Takes Two", tags: ["pareja", "cooperativo", "aventura", "multijugador", "copias"], title: "It Takes Two", desc: "Ganador a Juego del Año con más de 20 millones de copias vendidas.", reason: "Cada nivel introduce mecánicas nuevas que solo funcionan comunicándose y ayudándose mutuamente.", vibeNote: "Juego del Año con más de 20 millones de copias.", idealMoment: "Jugar en pareja o con alguien especial.", searchUrl: "https://www.google.com/search?q=It+Takes+Two+videojuego" },
+
+                // FEAR
+                { mood: "fear", year: 2019, decade: "2010s", awards: ["Golden Joystick Game of the Year"], sales: "Más de 14 millones de copias vendidas", salesCount: 14000000, wikiQuery: "Resident Evil 2 (videojuego de 2019)", tags: ["terror", "suspenso", "zombies", "accion", "miedo", "copias"], title: "Resident Evil 2 Remake", desc: "Survival horror con más de 14 millones de copias vendidas.", reason: "Pasillos oscuros, munición escasa y pasos acercándose crean una tensión magistral.", vibeNote: "Más de 14 millones de copias; survival horror tenso.", idealMoment: "Sentir adrenalina y suspenso real.", searchUrl: "https://www.google.com/search?q=Resident+Evil+2+Remake" },
+
+                // LAUGH
+                { mood: "laugh", year: 2020, decade: "2020s", awards: ["Golden Joystick Best Multiplayer"], sales: "Más de 11 millones de copias en PC", salesCount: 11000000, wikiQuery: "Fall Guys", tags: ["comedia", "multijugador", "fiesta", "gratis", "colorido", "copias"], title: "Fall Guys", desc: "Carreras caóticas con más de 11 millones de copias vendidas en PC.", reason: "Físicas torpes, disfraces graciosos y caos amistoso imposible de tomarse en serio.", vibeNote: "Caos colorido y risas aseguradas.", idealMoment: "Descontracturar y divertirte sin presión.", searchUrl: "https://www.google.com/search?q=Fall+Guys" },
+
+                // NOSTALGIC
+                { mood: "nostalgic", year: 2011, decade: "2010s", awards: ["Videojuego más vendido de la historia"], sales: "Más de 300 millones de copias vendidas", salesCount: 300000000, wikiQuery: "Minecraft", tags: ["nostalgia", "mundo abierto", "construccion", "aventura", "clasico", "copias"], title: "Minecraft", desc: "El videojuego más vendido de la historia con más de 300 millones de copias.", reason: "Apenas suena la música de piano de C418, vuelve la sensación de descubrir tu primer refugio.", vibeNote: "Más de 300 millones de copias; nostalgia infinita.", idealMoment: "Explorar y construir a tu manera.", searchUrl: "https://www.google.com/search?q=Minecraft" },
+                { mood: "nostalgic", year: 2004, decade: "2000s", awards: ["Juego más vendido de PS2"], sales: "Más de 27 millones de copias vendidas", salesCount: 27000000, wikiQuery: "Grand Theft Auto: San Andreas", tags: ["nostalgia", "mundo abierto", "accion", "clasico", "2000s", "copias"], title: "GTA: San Andreas", desc: "Clásico eterno con más de 27 millones de copias vendidas.", reason: "Sus calles, radios y libertad total siguen siendo sinónimo de tardes inolvidables.", vibeNote: "Más de 27 millones de copias; leyenda de mundo abierto.", idealMoment: "Revivir una época dorada del gaming.", searchUrl: "https://www.google.com/search?q=GTA+San+Andreas" },
+                { mood: "nostalgic", year: 2000, decade: "2000s", awards: ["Clásico de estrategia PC"], sales: "Más de 3 millones de copias vendidas", salesCount: 3000000, wikiQuery: "The Sims", tags: ["nostalgia", "simulacion", "construccion", "2000", "clasico", "copias"], title: "Los Sims (2000)", desc: "El revolucionario simulador social lanzado en el año 2000.", reason: "Estrenado en el año 2000, vendió millones de copias permitiendo construir casas y controlar vidas virtuales.", vibeNote: "Clásico histórico del año 2000.", idealMoment: "Nostalgia gamer del año 2000.", searchUrl: "https://www.google.com/search?q=Los+Sims+2000+videojuego" },
+
+                // EPIC
+                { mood: "epic", year: 2015, decade: "2010s", awards: ["Juego del Año (The Game Awards)"], sales: "Más de 50 millones de copias vendidas", salesCount: 50000000, wikiQuery: "The Witcher 3: Wild Hunt", tags: ["epico", "mundo abierto", "rpg", "fantasia", "aventura", "copias"], title: "The Witcher 3: Wild Hunt", desc: "Aventura épica con más de 50 millones de copias vendidas.", reason: "Cada misión secundaria tiene la profundidad de una novela y un mundo vivo impresionante.", vibeNote: "Más de 50 millones de copias; fantasía épica monumental.", idealMoment: "Perderte en una gran aventura.", searchUrl: "https://www.google.com/search?q=The+Witcher+3+Wild+Hunt" },
+                { mood: "epic", year: 2018, decade: "2010s", awards: ["Juego del Año (The Game Awards)"], sales: "Más de 23 millones de copias vendidas", salesCount: 23000000, wikiQuery: "God of War (videojuego de 2018)", tags: ["epico", "accion", "aventura", "mitologia", "copias"], title: "God of War (2018)", desc: "Ganador a Juego del Año con más de 23 millones de copias vendidas.", reason: "Plano secuencia sin cortes, combates titánicos y una relación padre-hijo emocionante.", vibeNote: "Más de 23 millones de copias; escala mitológica.", idealMoment: "Vivir una aventura cinematográfica grandiosa.", searchUrl: "https://www.google.com/search?q=God+of+War+2018" },
+                { mood: "epic", year: 2022, decade: "2020s", awards: ["Juego del Año (The Game Awards)"], sales: "Más de 25 millones de copias vendidas", salesCount: 25000000, wikiQuery: "Elden Ring", tags: ["epico", "mundo abierto", "rpg", "fantasia", "accion", "copias"], title: "Elden Ring", desc: "Ganador a Juego del Año con más de 25 millones de copias vendidas.", reason: "Recompensa la exploración con paisajes imponentes y victorias inolvidables.", vibeNote: "Más de 25 millones de copias; desafío legendario.", idealMoment: "Sentir la grandeza de conquistar lo imposible.", searchUrl: "https://www.google.com/search?q=Elden+Ring" },
+
+                // PARTY
+                { mood: "party", year: 2018, decade: "2010s", awards: ["The Game Awards Best Multiplayer"], sales: "Más de 500 millones de jugadores", salesCount: 10000000, wikiQuery: "Among Us", tags: ["fiesta", "multijugador", "amigos", "misterio", "copias"], title: "Among Us", desc: "Deducción social, sabotajes y debates con amigos.", reason: "Convierte cualquier reunión o llamada en discusiones divertidísimas llenas de sospechas.", vibeNote: "Intriga social y risas en grupo.", idealMoment: "Jugar con amigos y debatir quién miente.", searchUrl: "https://www.google.com/search?q=Among+Us" },
+
+                // LONELY NIGHT
+                { mood: "lonely_night", year: 2017, decade: "2010s", awards: ["Clásico Indie Metroidvania"], sales: "Más de 3 millones de copias vendidas", salesCount: 3000000, wikiQuery: "Hollow Knight", tags: ["noche", "indie", "aventura", "exploracion", "misterio", "copias"], title: "Hollow Knight", desc: "Aventura indie atmosférica con más de 3 millones de copias vendidas.", reason: "El sonido de la lluvia en Ciudad de Lágrimas y su piano melancólico son pura magia nocturna.", vibeNote: "Más de 3 millones de copias; atmósfera melancólica.", idealMoment: "Noche tranquila explorando con auriculares.", searchUrl: "https://www.google.com/search?q=Hollow+Knight" },
+
+                // ANGRY
+                { mood: "angry", year: 2020, decade: "2020s", awards: ["Nominado a Juego del Año"], sales: "Más de 3 millones de copias vendidas", salesCount: 3000000, wikiQuery: "Doom Eternal", tags: ["accion", "intenso", "disparos", "metal", "energia", "copias"], title: "DOOM Eternal", desc: "Acción frenética en primera persona con banda sonora heavy metal.", reason: "Movimiento constante y combate agresivo que canalizan cualquier bronca en adrenalina.", vibeNote: "Frenesí absoluto y metal industrial.", idealMoment: "Descargar energía a toda velocidad.", searchUrl: "https://www.google.com/search?q=DOOM+Eternal" },
+
+                // SUNDAY LAZY
+                { mood: "sunday_lazy", year: 2014, decade: "2010s", awards: ["Fenómeno Simulación"], sales: "Más de 85 millones de jugadores", salesCount: 10000000, wikiQuery: "The Sims 4", tags: ["domingo", "tranquilo", "simulacion", "construccion", "gratis", "copias"], title: "Los Sims 4", desc: "Creá personajes, diseñá casas y controlá historias sin apuros.", reason: "Ideal para jugar relajado mientras tomás algo, pausando cuando quieras.", vibeNote: "Creatividad relajada sin reloj.", idealMoment: "Domingo lento diseñando y jugando tranquilo.", searchUrl: "https://www.google.com/search?q=Los+Sims+4" },
+
+                // COOKING / CLEANING
+                { mood: "cooking_cleaning", year: 2018, decade: "2010s", awards: ["The Game Awards Best Family"], sales: "Más de 5 millones de copias vendidas", salesCount: 5000000, wikiQuery: "Overcooked! 2", tags: ["cocina", "multijugador", "alegre", "cooperativo", "copias"], title: "Overcooked! 2", desc: "Cocina frenética con más de 5 millones de copias vendidas.", reason: "Colorido, rítmico y lleno de energía culinaria para activar el modo acción.", vibeNote: "Ritmo culinario alegre y dinámico.", idealMoment: "Entrar en modo movimiento y organización.", searchUrl: "https://www.google.com/search?q=Overcooked+2" },
+
+                // CURIOUS
+                { mood: "curious", year: 2016, decade: "2010s", awards: ["The Game Awards Best Ongoing"], sales: "Más de 10 millones de copias vendidas", salesCount: 10000000, wikiQuery: "No Man's Sky", tags: ["espacio", "exploracion", "mundo abierto", "ciencia ficcion", "copias"], title: "No Man's Sky", desc: "Explorá un universo infinito con más de 10 millones de copias vendidas.", reason: "Despierta el espíritu de explorador espacial viajando sin pantallas de carga entre planetas.", vibeNote: "Más de 10 millones de copias; curiosidad espacial.", idealMoment: "Descubrir mundos desconocidos.", searchUrl: "https://www.google.com/search?q=No+Mans+Sky" },
+
+                // BADASS
+                { mood: "badass", year: 2018, decade: "2010s", awards: ["Más de 175 premios GOTY"], sales: "Más de 65 millones de copias vendidas", salesCount: 65000000, wikiQuery: "Red Dead Redemption 2", tags: ["accion", "mundo abierto", "aventura", "historia", "copias"], title: "Red Dead Redemption 2", desc: "Obra maestra del Salvaje Oeste con más de 65 millones de copias vendidas.", reason: "Te mete en la piel de un forajido legendario con un nivel de detalle cinematográfico.", vibeNote: "Más de 65 millones de copias; inmersión total.", idealMoment: "Sentirte el protagonista de un western épico.", searchUrl: "https://www.google.com/search?q=Red+Dead+Redemption+2" },
+
+                // COZY RAIN
+                { mood: "cozy_rain", year: 2021, decade: "2020s", awards: ["BAFTA Juego del Año"], sales: "Más de 1 millón de copias vendidas", salesCount: 1000000, wikiQuery: "Unpacking", tags: ["lluvia", "tranquilo", "indie", "puzzles", "copias"], title: "Unpacking", desc: "Ganador del BAFTA con más de 1 millón de copias vendidas.", reason: "Sonidos cotidianos relajantes y ritmo pausado ideal para acompañar una tarde lluviosa.", vibeNote: "Más de 1 millón de copias; íntimo y relajante.", idealMoment: "Tarde de lluvia con bebida caliente.", searchUrl: "https://www.google.com/search?q=Unpacking+videojuego" },
+
+                // ROADTRIP
+                { mood: "roadtrip", year: 2021, decade: "2020s", awards: ["The Game Awards Best Sports/Racing"], sales: "Más de 40 millones de jugadores", salesCount: 15000000, wikiQuery: "Forza Horizon 5", tags: ["autos", "ruta", "mundo abierto", "velocidad", "copias"], title: "Forza Horizon 5", desc: "Conducción libre por paisajes increíbles con excelente música.", reason: "Permite recorrer costas, desiertos y montañas con total libertad y radios geniales.", vibeNote: "Libertad en carretera y paisajes vibrantes.", idealMoment: "Sentir el espíritu de salir a la ruta.", searchUrl: "https://www.google.com/search?q=Forza+Horizon+5" },
+
+                // EXISTENTIAL
+                { mood: "existential", year: 2012, decade: "2010s", awards: ["BAFTA Mejor Juego del Año"], sales: "Más de 3 millones de copias vendidas", salesCount: 3000000, wikiQuery: "Journey (videojuego)", tags: ["profundo", "indie", "aventura", "arte", "tranquilo", "copias"], title: "Journey", desc: "Ganador del BAFTA con más de 3 millones de copias vendidas.", reason: "Sin una sola palabra, habla sobre el ciclo de la vida y los encuentros en el camino.", vibeNote: "Poético, trascendente y profundamente emotivo.", idealMoment: "Reflexionar sobre el viaje de la vida.", searchUrl: "https://www.google.com/search?q=Journey+videojuego" }
+            ]
+        };
+
+        const quickTagsByCategory = {
+            music: [
+                { label: "📅 Del año 2000", value: "del 2000" },
+                { label: "🏆 Ganadora de Grammy / Oscar", value: "gano un grammy" },
+                { label: "🇦🇷 En español / Nacional", value: "en español nacional" },
+                { label: "🎸 Rock / Clásicos", value: "rock clasico" },
+                { label: "💿 Más de 10 millones de copias", value: "vendio mas de 10 millones de copias" },
+                { label: "🎹 Tranquila / Acústica", value: "tranquila acustica" }
+            ],
+            movie: [
+                { label: "🏆 Ganó un Oscar", value: "gano un oscar" },
+                { label: "📅 Del año 2000", value: "del 2000" },
+                { label: "🇦🇷 Argentina / En español", value: "argentina en español" },
+                { label: "🎬 Animada / Pixar", value: "animada" },
+                { label: "🚀 Ciencia Ficción", value: "ciencia ficcion" },
+                { label: "📼 Clásica de los 80/90", value: "clasico" }
+            ],
+            game: [
+                { label: "💿 Vendió +100.000 copias", value: "vendio mas de 100000 copias" },
+                { label: "🏆 Juego del Año (GOTY)", value: "juego del año" },
+                { label: "📅 Del año 2000", value: "del 2000" },
+                { label: "🌍 Mundo Abierto", value: "mundo abierto" },
+                { label: "👥 Multijugador / Pareja", value: "multijugador pareja" },
+                { label: "🎨 Indie / Tranquilo", value: "indie tranquilo" }
+            ]
         };
 
         let currentMatchData = null;
+        let seenTitles = new Set();
+        let dislikedTitles = new Set();
         let historyList = JSON.parse(localStorage.getItem('smartmatch_history')) || [];
+        let favoritesList = JSON.parse(localStorage.getItem('smartmatch_favorites')) || [];
+        let currentSidebarTab = 'history';
+        let isSpinning = false;
+
+        function normalizeText(str) {
+            return str
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "");
+        }
+
+        function getCategoryLabel(cat) {
+            if (cat === 'movie') return 'Película';
+            if (cat === 'game') return 'Videojuego';
+            return 'Música';
+        }
+
+        function getCategoryIcon(catType) {
+            if (catType === 'Película') return '🎬';
+            if (catType === 'Videojuego') return '🎮';
+            return '🎵';
+        }
+
+        function updateQuickTags() {
+            const category = document.getElementById('category-select').value;
+            const container = document.getElementById('quick-tags-container');
+            container.innerHTML = '';
+
+            quickTagsByCategory[category].forEach(tag => {
+                const chip = document.createElement('span');
+                chip.className = 'tag-chip';
+                chip.innerText = tag.label;
+                chip.onclick = () => {
+                    const input = document.getElementById('extra-input');
+                    const current = input.value.trim();
+                    if (chip.classList.contains('active')) {
+                        chip.classList.remove('active');
+                        input.value = current.replace(tag.value, '').replace(/,\s*,/g, ',').replace(/^,\s*|,\s*$/g, '').trim();
+                    } else {
+                        chip.classList.add('active');
+                        input.value = current ? `${current}, ${tag.value}` : tag.value;
+                    }
+                };
+                container.appendChild(chip);
+            });
+        }
+
+        function renderMetaPills(item) {
+            const container = document.getElementById('res-meta-pills');
+            container.innerHTML = '';
+            const pills = [];
+            if (item.year) pills.push(`📅 Año: ${item.year}`);
+            if (item.awards && item.awards.length > 0) pills.push(`🏆 ${item.awards.join(' • ')}`);
+            if (item.sales) pills.push(`📈 ${item.sales}`);
+
+            pills.forEach(text => {
+                const span = document.createElement('span');
+                span.className = 'meta-pill';
+                span.innerText = text;
+                container.appendChild(span);
+            });
+        }
+
+        async function fetchWebKnowledge(queryTitle, fallbackTitle, categoryType) {
+            const imgBox = document.getElementById('knowledge-img-box');
+            const summaryEl = document.getElementById('knowledge-summary');
+            const googleLink = document.getElementById('knowledge-google-link');
+            const wikiLink = document.getElementById('knowledge-wiki-link');
+
+            const cleanFallback = fallbackTitle.split('/')[0].replace(/\(\d{4}\)/g, '').trim();
+            const searchTerm = queryTitle || cleanFallback;
+
+            googleLink.href = `https://www.google.com/search?q=${encodeURIComponent(cleanFallback + ' ' + categoryType)}`;
+            wikiLink.style.display = 'none';
+            summaryEl.className = 'knowledge-summary skeleton-pulse';
+            summaryEl.innerText = 'Buscando ficha informativa e imagen...';
+            imgBox.innerHTML = `<span class="knowledge-img-placeholder">${getCategoryIcon(categoryType)}</span>`;
+
+            try {
+                let res = await fetch(`https://es.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(searchTerm)}`);
+                
+                if (!res.ok) {
+                    const searchRes = await fetch(`https://es.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(searchTerm)}&format=json&origin=*`);
+                    const searchData = await searchRes.json();
+                    if (searchData.query && searchData.query.search && searchData.query.search.length > 0) {
+                        const bestTitle = searchData.query.search[0].title;
+                        res = await fetch(`https://es.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(bestTitle)}`);
+                    }
+                }
+
+                if (res && res.ok) {
+                    const data = await res.json();
+                    summaryEl.className = 'knowledge-summary';
+
+                    if (data.extract) {
+                        const shortText = data.extract.length > 260 ? data.extract.slice(0, 257) + '...' : data.extract;
+                        summaryEl.innerText = shortText;
+                    } else {
+                        summaryEl.innerText = `Ficha encontrada para "${cleanFallback}". Podés explorar más detalles en Google.`;
+                    }
+
+                    if (data.thumbnail && data.thumbnail.source) {
+                        imgBox.innerHTML = `<img src="${data.thumbnail.source}" alt="${cleanFallback}" loading="lazy">`;
+                    }
+
+                    if (data.content_urls && data.content_urls.desktop && data.content_urls.desktop.page) {
+                        wikiLink.href = data.content_urls.desktop.page;
+                        wikiLink.style.display = 'inline';
+                    }
+
+                    if (currentMatchData) {
+                        currentMatchData.webSummary = summaryEl.innerText;
+                        currentMatchData.webImage = (data.thumbnail && data.thumbnail.source) ? data.thumbnail.source : '';
+                    }
+                } else {
+                    summaryEl.className = 'knowledge-summary';
+                    summaryEl.innerText = `Hacé clic en el enlace de Google para ver sinopsis, imágenes, reseñas y disponibilidad de "${cleanFallback}".`;
+                }
+            } catch (error) {
+                summaryEl.className = 'knowledge-summary';
+                summaryEl.innerText = `Explorá información completa, imágenes y dónde disfrutar "${cleanFallback}" directamente en Google.`;
+            }
+        }
+
+        function renderReasonBreakdown(points) {
+            const container = document.getElementById('res-breakdown');
+            container.innerHTML = '';
+            points.forEach(pt => {
+                const div = document.createElement('div');
+                div.className = 'reason-point' + (pt.highlight ? ' highlight-criteria' : '');
+                div.innerHTML = `<span>${pt.icon}</span><div><strong>${pt.label}:</strong> ${pt.text}</div>`;
+                container.appendChild(div);
+            });
+        }
 
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('active');
             document.getElementById('sidebarOverlay').classList.toggle('active');
         }
 
-        function saveToHistory(data) {
-            const now = new Date();
-            const dateStr = now.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
-            
-            const newItem = {
-                date: dateStr,
-                title: data.title,
-                desc: data.desc,
-                reason: data.reason,
-                searchUrl: data.searchUrl,
-                categoryType: data.categoryType
-            };
+        function switchSidebarTab(tab) {
+            currentSidebarTab = tab;
+            document.getElementById('tab-history').classList.toggle('active', tab === 'history');
+            document.getElementById('tab-favorites').classList.toggle('active', tab === 'favorites');
+            renderSidebarList();
+        }
 
-            // Evitar duplicados consecutivos exactos
-            if (historyList.length === 0 || historyList[0].title !== newItem.title) {
-                historyList.unshift(newItem);
-                if (historyList.length > 15) historyList.pop(); // Mantener máximo 15
-                localStorage.setItem('smartmatch_history', JSON.stringify(historyList));
-                renderHistory();
+        function updateFavDot() {
+            const dot = document.getElementById('fav-dot');
+            if (favoritesList.length > 0) {
+                dot.style.display = 'inline-block';
+                dot.innerText = favoritesList.length;
+            } else {
+                dot.style.display = 'none';
             }
         }
 
-        function renderHistory() {
+        function saveToHistory(data) {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+            const newItem = { ...data, date: dateStr };
+
+            if (historyList.length === 0 || historyList[0].title !== newItem.title) {
+                historyList.unshift(newItem);
+                if (historyList.length > 20) historyList.pop();
+                localStorage.setItem('smartmatch_history', JSON.stringify(historyList));
+                if (currentSidebarTab === 'history') renderSidebarList();
+            }
+        }
+
+        function toggleFavoriteCurrent() {
+            if (!currentMatchData) return;
+            const idx = favoritesList.findIndex(f => f.title === currentMatchData.title);
+            const btn = document.getElementById('btn-like');
+
+            if (idx >= 0) {
+                favoritesList.splice(idx, 1);
+                btn.classList.remove('liked');
+                btn.innerText = "🤍 Guardar en Favoritos";
+            } else {
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' });
+                favoritesList.unshift({ ...currentMatchData, date: dateStr });
+                btn.classList.add('liked');
+                btn.innerText = "❤️ ¡Guardado en Favoritos!";
+                launchConfetti(25);
+            }
+
+            localStorage.setItem('smartmatch_favorites', JSON.stringify(favoritesList));
+            updateFavDot();
+            if (currentSidebarTab === 'favorites') renderSidebarList();
+        }
+
+        function dislikeAndReroll() {
+            if (currentMatchData) {
+                dislikedTitles.add(currentMatchData.title);
+            }
+            startMatchAnimation(true, false);
+        }
+
+        function renderSidebarList() {
             const container = document.getElementById('historyListContainer');
-            if (historyList.length === 0) {
-                container.innerHTML = `<div class="empty-history">Aún no hay recomendaciones guardadas en tu historial. ¡Generá una para empezar!</div>`;
+            const list = currentSidebarTab === 'history' ? historyList : favoritesList;
+
+            if (list.length === 0) {
+                const msg = currentSidebarTab === 'history'
+                    ? "Aún no hay recomendaciones en tu historial. ¡Generá una para empezar!"
+                    : "Todavía no guardaste favoritos. Tocá el corazón ❤️ en cualquier recomendación.";
+                container.innerHTML = `<div class="empty-history">${msg}</div>`;
                 return;
             }
 
             container.innerHTML = '';
-            historyList.forEach((item, index) => {
+            list.forEach((item, index) => {
                 const div = document.createElement('div');
                 div.className = 'history-item';
                 div.innerHTML = `
-                    <span class="history-item-date">${item.date} • ${item.categoryType}</span>
+                    <span class="history-item-date">${item.date} • ${getCategoryIcon(item.categoryType)} ${item.categoryType}</span>
                     <p class="history-item-title">${item.title}</p>
                 `;
-                div.onclick = () => loadFromHistory(index);
+                div.onclick = () => loadFromList(list, index);
                 container.appendChild(div);
             });
         }
 
-        function loadFromHistory(index) {
-            const item = historyList[index];
+        function loadFromList(list, index) {
+            const item = list[index];
             currentMatchData = item;
 
             document.getElementById('res-title').innerText = item.title;
             document.getElementById('res-desc').innerText = item.desc;
+            renderMetaPills(item);
             document.getElementById('res-reason').innerText = item.reason;
+            renderReasonBreakdown(item.breakdownPoints || [
+                { icon: "✨", label: "Selección guardada", text: "Recuperado desde tu colección personal de SmartMatch." }
+            ]);
             document.getElementById('res-link').href = item.searchUrl;
-            document.getElementById('res-link').innerText = item.categoryType === 'Película' ? "🎬 Ver ficha o buscar película online" : "🎵 Escuchar música / playlist online";
+            
+            if (item.categoryType === 'Película') {
+                document.getElementById('res-link').innerText = "🎬 Ver ficha o buscar película online";
+            } else if (item.categoryType === 'Videojuego') {
+                document.getElementById('res-link').innerText = "🎮 Ver ficha, gameplay o tienda del juego";
+            } else {
+                document.getElementById('res-link').innerText = "🎵 Escuchar canción / playlist online";
+            }
+
+            document.getElementById('res-badge').innerText = `Match: ${item.matchPercent || 91}%`;
+            document.getElementById('res-pref-badge').style.display = 'none';
+
+            const isFav = favoritesList.some(f => f.title === item.title);
+            const btnLike = document.getElementById('btn-like');
+            btnLike.classList.toggle('liked', isFav);
+            btnLike.innerText = isFav ? "❤️ ¡Guardado en Favoritos!" : "🤍 Guardar en Favoritos";
+
+            fetchWebKnowledge(item.wikiQuery, item.title, item.categoryType);
 
             document.getElementById('result-box').style.display = 'block';
             toggleSidebar();
             document.getElementById('result-box').scrollIntoView({ behavior: 'smooth' });
         }
 
-        function generateRecommendation() {
-            const category = document.getElementById('category-select').value;
-            const mood = document.getElementById('mood-select').value;
+        function startMatchAnimation(forceDifferent, isSurprise) {
+            if (isSpinning) return;
+            isSpinning = true;
 
-            currentMatchData = recommendationsDB[category][mood];
-            currentMatchData.categoryType = category === 'movie' ? 'Película' : 'Música';
+            const category = document.getElementById('category-select').value;
+            const moodSelect = document.getElementById('mood-select');
+
+            if (isSurprise) {
+                const randomMoodIdx = Math.floor(Math.random() * moodSelect.options.length);
+                moodSelect.selectedIndex = randomMoodIdx;
+            }
+
+            const resultBox = document.getElementById('result-box');
+            const rouletteBox = document.getElementById('roulette-box');
+            const ticker = document.getElementById('roulette-ticker');
+
+            resultBox.style.display = 'none';
+            rouletteBox.style.display = 'block';
+            rouletteBox.scrollIntoView({ behavior: 'smooth' });
+
+            const pool = catalogDB[category];
+            let ticks = 0;
+            const maxTicks = 10;
+
+            const interval = setInterval(() => {
+                const randomItem = pool[Math.floor(Math.random() * pool.length)];
+                ticker.innerText = randomItem.title;
+                ticker.style.transform = ticks % 2 === 0 ? "scale(1.03)" : "scale(0.98)";
+                ticks++;
+
+                if (ticks >= maxTicks) {
+                    clearInterval(interval);
+                    ticker.style.transform = "scale(1)";
+                    rouletteBox.style.display = 'none';
+                    isSpinning = false;
+                    generateRecommendation(forceDifferent, isSurprise);
+                }
+            }, 65);
+        }
+
+        // Evaluador inteligente de criterios específicos (años, premios, ventas, etc.)
+        function evaluateSpecificConstraints(item, normExtra) {
+            let bonus = 0;
+            let exactMatches = [];
+
+            const itemAwardsNorm = normalizeText((item.awards || []).join(" "));
+            const itemSalesNorm = normalizeText(item.sales || "");
+            const itemAllNorm = normalizeText(`${item.title} ${item.desc} ${(item.tags || []).join(" ")} ${itemAwardsNorm} ${itemSalesNorm} ${item.year || ""}`);
+
+            // 1. Detección de año específico (ej: "2000", "del 2000", "1994", "2018")
+            const yearMatch = normExtra.match(/\b(19\d{2}|20\d{2})\b/);
+            if (yearMatch) {
+                const requestedYear = parseInt(yearMatch[1], 10);
+                if (item.year === requestedYear) {
+                    bonus += 65;
+                    exactMatches.push(`Lanzado exactamente en ${requestedYear}`);
+                } else if (Math.abs((item.year || 0) - requestedYear) <= 2) {
+                    bonus += 15;
+                } else {
+                    bonus -= 30;
+                }
+            }
+
+            // 2. Detección de décadas (ej: "80", "80s", "90s", "2000s", "dosmil")
+            if (/\b(80s?|ochenta)\b/.test(normExtra)) {
+                if (item.decade === "80s" || (item.year >= 1980 && item.year <= 1989)) {
+                    bonus += 45;
+                    exactMatches.push("Clásico de la década de los 80");
+                } else {
+                    bonus -= 20;
+                }
+            }
+            if (/\b(90s?|noventa)\b/.test(normExtra)) {
+                if (item.decade === "90s" || (item.year >= 1990 && item.year <= 1999)) {
+                    bonus += 45;
+                    exactMatches.push("Clásico de la década de los 90");
+                } else {
+                    bonus -= 20;
+                }
+            }
+
+            // 3. Detección de premios (Oscar, Grammy, BAFTA, GOTY / Juego del Año)
+            if (normExtra.includes("oscar")) {
+                if (itemAwardsNorm.includes("oscar") || itemAllNorm.includes("oscar")) {
+                    bonus += 65;
+                    exactMatches.push(`Premiado (${item.awards.join(", ")})`);
+                } else {
+                    bonus -= 35;
+                }
+            }
+            if (normExtra.includes("grammy")) {
+                if (itemAwardsNorm.includes("grammy") || itemAllNorm.includes("grammy")) {
+                    bonus += 65;
+                    exactMatches.push(`Premiado (${item.awards.join(", ")})`);
+                } else {
+                    bonus -= 35;
+                }
+            }
+            if (normExtra.includes("juego del ano") || normExtra.includes("goty") || normExtra.includes("premio") || normExtra.includes("bafta")) {
+                if ((item.awards && item.awards.length > 0) && (itemAwardsNorm.includes("ano") || itemAwardsNorm.includes("bafta") || itemAwardsNorm.includes("goty") || itemAwardsNorm.includes("premio") || itemAwardsNorm.includes("oscar") || itemAwardsNorm.includes("grammy"))) {
+                    bonus += 55;
+                    exactMatches.push(`Reconocimiento oficial: ${item.awards.join(", ")}`);
+                }
+            }
+
+            // 4. Detección de copias vendidas / éxito comercial (ej: "vendio mas de 100000 copias", "millones de copias")
+            const asksForSales = normExtra.includes("copia") || normExtra.includes("vendi") || normExtra.includes("venta") || normExtra.includes("exitos") || normExtra.includes("bestseller");
+            if (asksForSales) {
+                // Extraer número si el usuario puso una cifra (ej: 100000 o 100.000)
+                const numClean = normExtra.replace(/\./g, '').match(/\b(\d{4,})\b/);
+                const minRequired = numClean ? parseInt(numClean[1], 10) : 100000;
+
+                if (item.salesCount && item.salesCount >= minRequired) {
+                    bonus += 65;
+                    exactMatches.push(`Récord de ventas verificado: ${item.sales}`);
+                } else if (itemSalesNorm.includes("millon") || itemSalesNorm.includes("platino") || itemSalesNorm.includes("copias")) {
+                    bonus += 50;
+                    exactMatches.push(`Éxito comercial comprobado: ${item.sales}`);
+                } else {
+                    bonus -= 25;
+                }
+            }
+
+            return { bonus, exactMatches };
+        }
+
+        function generateRecommendation(forceDifferent, isSurprise) {
+            const category = document.getElementById('category-select').value;
+            const moodSelect = document.getElementById('mood-select');
+            const mood = moodSelect.value;
+            const moodText = moodSelect.options[moodSelect.selectedIndex].text.replace(/^[^\s]+\s/, '');
+            const rawExtra = document.getElementById('extra-input').value.trim();
+            const normExtra = normalizeText(rawExtra);
+
+            const stopWords = new Set(["que", "sea", "algo", "con", "sin", "para", "una", "uno", "los", "las", "del", "por", "mas", "muy", "bien", "en", "de", "la", "el", "o", "y", "gano", "un", "una", "vendio", "copias"]);
+            const keywords = normExtra
+                .split(/[\s,.;:!?]+/)
+                .filter(w => w.length >= 3 && !stopWords.has(w));
+
+            const items = catalogDB[category];
+
+            const scored = items.map(item => {
+                let score = 0;
+                const moodMatches = item.mood === mood;
+
+                // Si el usuario NO puso restricciones muy específicas, el estado de ánimo pesa mucho;
+                // si puso un criterio específico (ej: Oscar, año 2000, copias vendidas), priorizamos cumplirlo.
+                const specificEval = rawExtra.length > 0
+                    ? evaluateSpecificConstraints(item, normExtra)
+                    : { bonus: 0, exactMatches: [] };
+
+                if (moodMatches) {
+                    score += specificEval.exactMatches.length > 0 ? 18 : 14;
+                }
+
+                score += specificEval.bonus;
+
+                if (normExtra.includes("tranquil") || normExtra.includes("suave") || normExtra.includes("calma") || normExtra.includes("nada pesado")) {
+                    if (item.mood === "relax" || item.tags.includes("tranquila") || item.tags.includes("tranquilo") || item.tags.includes("suave")) {
+                        score += 18;
+                    }
+                    if (item.mood === "angry" || item.mood === "fear" || item.tags.includes("metal")) {
+                        score -= 30;
+                    }
+                }
+
+                const searchableText = normalizeText(`${item.title} ${item.desc} ${(item.tags || []).join(" ")} ${(item.awards || []).join(" ")} ${item.sales || ""} ${item.year || ""}`);
+                let matchedKeywords = 0;
+
+                keywords.forEach(kw => {
+                    const stem = kw.length > 5 ? kw.slice(0, -1) : kw;
+                    if (searchableText.includes(stem)) {
+                        score += 15;
+                        matchedKeywords++;
+                    }
+                });
+
+                if (dislikedTitles.has(item.title)) {
+                    score -= 50;
+                }
+
+                if (forceDifferent && seenTitles.has(item.title)) {
+                    score -= 28;
+                } else if (currentMatchData && currentMatchData.title === item.title) {
+                    score -= 25;
+                }
+
+                score += Math.random() * 3;
+
+                return {
+                    item,
+                    score,
+                    matchedKeywords,
+                    moodMatches,
+                    exactMatches: specificEval.exactMatches
+                };
+            });
+
+            scored.sort((a, b) => b.score - a.score);
+
+            const winner = scored[0];
+            const chosen = winner.item;
+
+            seenTitles.add(chosen.title);
+            if (seenTitles.size > 10) {
+                const firstSeen = seenTitles.values().next().value;
+                seenTitles.delete(firstSeen);
+            }
+
+            let basePercent = winner.moodMatches ? 88 : 79;
+            if (winner.exactMatches.length > 0) {
+                basePercent = winner.moodMatches ? 97 : 93;
+            } else if (keywords.length > 0) {
+                const ratio = winner.matchedKeywords / keywords.length;
+                basePercent = Math.round(80 + ratio * 16);
+            }
+            const jitter = Math.floor(Math.random() * 3);
+            const finalPercent = Math.min(99, Math.max(76, basePercent + jitter));
+
+            let finalReason = `${chosen.reason} Elegimos esta opción porque encaja con tu momento ("${moodText}")`;
+            let finalUrl = chosen.searchUrl;
+            const prefBadge = document.getElementById('res-pref-badge');
+            const matchBadge = document.getElementById('res-badge');
+
+            prefBadge.classList.remove('exact-hit');
+
+            const breakdownPoints = [
+                {
+                    icon: "🎭",
+                    label: "Conexión con tu ánimo",
+                    text: chosen.vibeNote || `Se adapta al clima emocional de "${moodText}".`
+                },
+                {
+                    icon: "✨",
+                    label: "Momento ideal",
+                    text: chosen.idealMoment || "Pensado para disfrutar plenamente ahora mismo."
+                }
+            ];
+
+            matchBadge.innerText = `Match: ${finalPercent}%`;
+            matchBadge.classList.toggle('medium', finalPercent < 85);
+
+            if (isSurprise) {
+                finalReason += ", seleccionado al azar para sorprenderte con algo fuera de tu rutina.";
+                prefBadge.style.display = 'inline-block';
+                prefBadge.innerText = `🎰 Modo Sorpresa activado`;
+                breakdownPoints.push({
+                    icon: "🎰",
+                    label: "Factor sorpresa",
+                    text: `Combinamos al azar el ánimo "${moodText}" con lo mejor de nuestro catálogo.`
+                });
+            } else if (rawExtra.length > 0) {
+                if (winner.exactMatches.length > 0) {
+                    const detailStr = winner.exactMatches.join(" y ");
+                    finalReason += ` y cumple de forma exacta con tu criterio específico ("${rawExtra}"): ${detailStr}.`;
+                    prefBadge.style.display = 'inline-block';
+                    prefBadge.classList.add('exact-hit');
+                    prefBadge.innerText = `✅ Criterio cumplido: ${detailStr}`;
+                    breakdownPoints.unshift({
+                        icon: "🎯",
+                        label: "Criterio específico verificado",
+                        text: `Cumple exactamente con lo que pediste ("${rawExtra}") → ${detailStr}.`,
+                        highlight: true
+                    });
+                } else if (winner.matchedKeywords > 0) {
+                    finalReason += ` y coincide directamente con tu preferencia ("${rawExtra}").`;
+                    prefBadge.style.display = 'inline-block';
+                    prefBadge.innerText = `🎯 Coincide con: "${rawExtra}"`;
+                    breakdownPoints.unshift({
+                        icon: "🎯",
+                        label: "Coincidencia con tu filtro",
+                        text: `Integra las características que buscabas ("${rawExtra}") dentro de su estilo y etiquetas.`,
+                        highlight: true
+                    });
+                } else {
+                    finalReason += `. Además, adaptamos los enlaces externos con tu criterio ("${rawExtra}") para acercarnos aún más a tu pedido.`;
+                    prefBadge.style.display = 'inline-block';
+                    prefBadge.innerText = `🔎 Búsqueda ajustada: "${rawExtra}"`;
+                    finalUrl += `+${encodeURIComponent(rawExtra)}`;
+                    breakdownPoints.push({
+                        icon: "🔎",
+                        label: "Búsqueda personalizada",
+                        text: `Sumamos "${rawExtra}" directamente en los enlaces de búsqueda externa para ampliar opciones.`
+                    });
+                }
+            } else {
+                finalReason += ".";
+                prefBadge.style.display = 'none';
+            }
+
+            const catLabel = getCategoryLabel(category);
+
+            currentMatchData = {
+                title: chosen.title,
+                wikiQuery: chosen.wikiQuery,
+                desc: chosen.desc,
+                year: chosen.year,
+                awards: chosen.awards,
+                sales: chosen.sales,
+                reason: finalReason,
+                breakdownPoints: breakdownPoints,
+                searchUrl: finalUrl,
+                categoryType: catLabel,
+                matchPercent: finalPercent,
+                webSummary: '',
+                webImage: ''
+            };
 
             document.getElementById('res-title').innerText = currentMatchData.title;
             document.getElementById('res-desc').innerText = currentMatchData.desc;
+            renderMetaPills(chosen);
             document.getElementById('res-reason').innerText = currentMatchData.reason;
+            renderReasonBreakdown(breakdownPoints);
             document.getElementById('res-link').href = currentMatchData.searchUrl;
-            
+
             if (category === 'movie') {
                 document.getElementById('res-link').innerText = "🎬 Ver ficha o buscar película online";
+            } else if (category === 'game') {
+                document.getElementById('res-link').innerText = "🎮 Ver ficha, gameplay o tienda del juego";
             } else {
-                document.getElementById('res-link').innerText = "🎵 Escuchar música / playlist online";
+                document.getElementById('res-link').innerText = "🎵 Escuchar canción / playlist online";
             }
 
-            document.getElementById('result-box').style.display = 'block';
-            document.getElementById('result-box').scrollIntoView({ behavior: 'smooth' });
+            const isFav = favoritesList.some(f => f.title === currentMatchData.title);
+            const btnLike = document.getElementById('btn-like');
+            btnLike.classList.toggle('liked', isFav);
+            btnLike.innerText = isFav ? "❤️ ¡Guardado en Favoritos!" : "🤍 Guardar en Favoritos";
 
-            // Guardar automáticamente en el historial
+            const resultBox = document.getElementById('result-box');
+            resultBox.style.display = 'block';
+            resultBox.scrollIntoView({ behavior: 'smooth' });
+
+            fetchWebKnowledge(chosen.wikiQuery, chosen.title, catLabel);
+
+            if (finalPercent >= 92 || isSurprise) {
+                launchConfetti(30);
+            }
+
             saveToHistory(currentMatchData);
+        }
+
+        function launchConfetti(count) {
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const colors = ['#38bdf8', '#22c55e', '#8b5cf6', '#ec4899', '#f59e0b'];
+            const particles = Array.from({ length: count }, () => ({
+                x: canvas.width / 2 + (Math.random() - 0.5) * 200,
+                y: canvas.height * 0.45,
+                vx: (Math.random() - 0.5) * 10,
+                vy: (Math.random() - 1.2) * 10,
+                size: Math.random() * 6 + 4,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                alpha: 1
+            }));
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                let alive = false;
+                particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.32;
+                    p.alpha -= 0.022;
+                    if (p.alpha > 0) {
+                        alive = true;
+                        ctx.globalAlpha = p.alpha;
+                        ctx.fillStyle = p.color;
+                        ctx.fillRect(p.x, p.y, p.size, p.size);
+                    }
+                });
+                if (alive) requestAnimationFrame(animate);
+                else ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+            animate();
         }
 
         function downloadRecommendationHTML() {
             if (!currentMatchData) return;
+
+            const imgHtml = currentMatchData.webImage
+                ? `<img src="${currentMatchData.webImage}" alt="${currentMatchData.title}" style="width:120px; border-radius:8px; margin-bottom:15px;">`
+                : '';
+            const infoHtml = currentMatchData.webSummary
+                ? `<div class="reason-box"><h3>🌐 Información</h3><p>${currentMatchData.webSummary}</p></div>`
+                : '';
+            const breakdownHtml = (currentMatchData.breakdownPoints || [])
+                .map(p => `<li style="margin-bottom:6px;"><strong>${p.icon} ${p.label}:</strong> ${p.text}</li>`)
+                .join('');
 
             const htmlContent = `<!DOCTYPE html>
 <html lang="es">
@@ -625,21 +1819,25 @@ HTML
         h1 { color: #38bdf8; margin-top: 0; }
         .badge { display: inline-block; background: #064e3b; color: #a7f3d0; padding: 4px 12px; border-radius: 15px; font-size: 0.85rem; margin-bottom: 15px; }
         .desc { font-size: 1.1rem; color: #38bdf8; margin-bottom: 20px; }
-        .reason-box { background-color: #0f172a; padding: 20px; border-radius: 8px; margin-bottom: 25px; border: 1px solid #334155; }
+        .reason-box { background-color: #0f172a; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #334155; }
         .reason-box h3 { margin-top: 0; color: #38bdf8; font-size: 0.95rem; text-transform: uppercase; }
-        .reason-box p { margin: 0; color: #cbd5e1; line-height: 1.6; }
+        .reason-box p, .reason-box ul { margin: 0; color: #cbd5e1; line-height: 1.6; }
+        .reason-box ul { padding-left: 18px; margin-top: 12px; }
         .btn { background-color: #22c55e; color: #ffffff; border: none; padding: 12px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; text-decoration: none; display: block; text-align: center; }
         .btn:hover { background-color: #16a34a; }
     </style>
 </head>
 <body>
     <div class="card">
-        <span class="badge">Recomendación SmartMatch (${currentMatchData.categoryType})</span>
+        <span class="badge">SmartMatch (${currentMatchData.categoryType}) • Match ${currentMatchData.matchPercent || 92}%</span>
         <h1>${currentMatchData.title}</h1>
+        ${imgHtml}
         <p class="desc">${currentMatchData.desc}</p>
+        ${infoHtml}
         <div class="reason-box">
             <h3>💡 ¿Por qué te lo recomendamos?</h3>
             <p>${currentMatchData.reason}</p>
+            <ul>${breakdownHtml}</ul>
         </div>
         <a href="${currentMatchData.searchUrl}" target="_blank" class="btn">🔍 Buscar y disfrutar ahora</a>
     </div>
@@ -650,7 +1848,7 @@ HTML
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `juego_para_seleccionar_tu_musica_o_pelicula.html`;
+            a.download = `recomendacion_smartmatch.html`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -662,8 +1860,10 @@ HTML
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Inicializar historial al cargar
-        renderHistory();
+        // Inicialización
+        updateQuickTags();
+        updateFavDot();
+        renderSidebarList();
     </script>
 </body>
 </html>
